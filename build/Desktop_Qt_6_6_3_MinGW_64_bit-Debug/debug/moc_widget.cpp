@@ -41,15 +41,17 @@ constexpr auto qt_meta_stringdata_CLASSWidgetENDCLASS = QtMocHelpers::stringData
     "Widget",
     "on_quit_clicked",
     "",
-    "onBtFormClick"
+    "onBtFormClick",
+    "randomPiction"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSWidgetENDCLASS_t {
-    uint offsetsAndSizes[8];
+    uint offsetsAndSizes[10];
     char stringdata0[7];
     char stringdata1[16];
     char stringdata2[1];
     char stringdata3[14];
+    char stringdata4[14];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASSWidgetENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -58,12 +60,14 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSWidgetENDCLASS_t qt_meta_string
         QT_MOC_LITERAL(0, 6),  // "Widget"
         QT_MOC_LITERAL(7, 15),  // "on_quit_clicked"
         QT_MOC_LITERAL(23, 0),  // ""
-        QT_MOC_LITERAL(24, 13)   // "onBtFormClick"
+        QT_MOC_LITERAL(24, 13),  // "onBtFormClick"
+        QT_MOC_LITERAL(38, 13)   // "randomPiction"
     },
     "Widget",
     "on_quit_clicked",
     "",
-    "onBtFormClick"
+    "onBtFormClick",
+    "randomPiction"
 };
 #undef QT_MOC_LITERAL
 #endif // !QT_MOC_HAS_STRING_DATA
@@ -75,7 +79,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSWidgetENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -83,12 +87,14 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSWidgetENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   26,    2, 0x08,    1 /* Private */,
-       3,    1,   27,    2, 0x08,    2 /* Private */,
+       1,    0,   32,    2, 0x08,    1 /* Private */,
+       3,    1,   33,    2, 0x08,    2 /* Private */,
+       4,    0,   36,    2, 0x08,    4 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::QJsonArray,
 
        0        // eod
 };
@@ -106,7 +112,9 @@ Q_CONSTINIT const QMetaObject Widget::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onBtFormClick'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<int, std::false_type>
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'randomPiction'
+        QtPrivate::TypeAndForceComplete<QJsonArray, std::false_type>
     >,
     nullptr
 } };
@@ -119,6 +127,8 @@ void Widget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         switch (_id) {
         case 0: _t->on_quit_clicked(); break;
         case 1: _t->onBtFormClick((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 2: { QJsonArray _r = _t->randomPiction();
+            if (_a[0]) *reinterpret_cast< QJsonArray*>(_a[0]) = std::move(_r); }  break;
         default: ;
         }
     }
@@ -143,13 +153,13 @@ int Widget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 3)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }

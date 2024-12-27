@@ -2,6 +2,8 @@
 #include "ui_widget.h"
 #include <QDebug>
 #include <QList>
+#include <QDir>
+#include <QJsonObject>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -36,6 +38,9 @@ void Widget::initUi()
     ui->like->initBtForm(":/images/like.png", "我喜欢", 3);
     ui->local->initBtForm(":/images/local.png", "本地下载", 4);
     ui->recent->initBtForm(":/images/recent.png", "最近播放", 5);
+
+    ui->recMusicBox->initRecBoxUi(randomPiction(), 1);
+    ui->supplyBox->initRecBoxUi(randomPiction(), 2);
 }
 
 void Widget::initConnect()
@@ -88,5 +93,28 @@ void Widget::onBtFormClick(int pageId)
         }
     }
     qDebug() << "turn to pageId = " << pageId;
+}
+
+QJsonArray Widget::randomPiction()
+{
+    // 获取文件名
+    QVector<QString> vecImageName;
+    foreach (const QString& imageName, QDir(":/images/rec").entryList()) {
+        vecImageName << imageName;
+    }
+    // 打乱顺序
+    std::random_shuffle(vecImageName.begin(), vecImageName.end());
+
+    QJsonArray  objArray;
+    for (int i = 0; i < vecImageName.size(); i++) {
+        QJsonObject obj;
+        obj.insert("path", ":/images/rec/" + vecImageName[i]);
+
+        QString text = QString("推荐-%1").arg(i, 3, 10, QChar('0'));
+        obj.insert("text", text);
+
+        objArray.push_back(obj);
+    }
+    return objArray;
 }
 

@@ -675,7 +675,7 @@ QPushButton:hover
              <number>0</number>
             </property>
             <property name="rightMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="bottomMargin">
              <number>0</number>
@@ -697,7 +697,7 @@ QPushButton:hover
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>878</width>
+                  <width>850</width>
                   <height>518</height>
                  </size>
                 </property>
@@ -763,7 +763,7 @@ QPushButton:hover
                    </widget>
                   </item>
                   <item>
-                   <widget class="QWidget" name="recMusicBox" native="true"/>
+                   <widget class="RecBox" name="recMusicBox" native="true"/>
                   </item>
                   <item>
                    <widget class="QLabel" name="supplyText">
@@ -790,7 +790,7 @@ QPushButton:hover
                    </widget>
                   </item>
                   <item>
-                   <widget class="QWidget" name="supplyBox" native="true"/>
+                   <widget class="RecBox" name="supplyBox" native="true"/>
                   </item>
                  </layout>
                 </widget>
@@ -1214,6 +1214,12 @@ QPushButton:hover
    <class>BtForm</class>
    <extends>QWidget</extends>
    <header location="global">btform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>RecBox</class>
+   <extends>QWidget</extends>
+   <header location="global">recbox.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

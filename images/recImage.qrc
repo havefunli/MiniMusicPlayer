@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>rec/001.png</file>
-        <file>rec/001.webp</file>
-        <file>rec/002.png</file>
         <file>rec/003.png</file>
         <file>rec/004.png</file>
         <file>rec/005.png</file>

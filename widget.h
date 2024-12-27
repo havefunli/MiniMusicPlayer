@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QWidget>
 #include <QDebug>
+#include <QJsonArray>
 #include <QGraphicsDropShadowEffect>
 
 QT_BEGIN_NAMESPACE
@@ -32,6 +33,9 @@ private slots:
     // 切换界面
     // 将其他按键颜色清除
     void onBtFormClick(int);
+    // 推荐图片音频构造
+    QJsonArray randomPiction();
+
 
 private:
     Ui::MusicPlayer *ui;

@@ -22,6 +22,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include <btform.h>
+#include <recbox.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -75,9 +76,9 @@ public:
     QVBoxLayout *verticalLayout_8;
     QLabel *recText;
     QLabel *recToday;
-    QWidget *recMusicBox;
+    RecBox *recMusicBox;
     QLabel *supplyText;
-    QWidget *supplyBox;
+    RecBox *supplyBox;
     QWidget *radioPage;
     QLabel *label_2;
     QWidget *musicPage;
@@ -397,7 +398,7 @@ public:
         verticalLayout_6 = new QVBoxLayout(rightBody);
         verticalLayout_6->setSpacing(0);
         verticalLayout_6->setObjectName("verticalLayout_6");
-        verticalLayout_6->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_6->setContentsMargins(0, 0, 5, 0);
         stackedWidget = new QStackedWidget(rightBody);
         stackedWidget->setObjectName("stackedWidget");
         stackedWidget->setStyleSheet(QString::fromUtf8(""));
@@ -406,7 +407,7 @@ public:
         scrollArea = new QScrollArea(recPage);
         scrollArea->setObjectName("scrollArea");
         scrollArea->setGeometry(QRect(0, 0, 878, 518));
-        scrollArea->setMinimumSize(QSize(878, 518));
+        scrollArea->setMinimumSize(QSize(850, 518));
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
@@ -433,7 +434,7 @@ public:
 
         verticalLayout_8->addWidget(recToday);
 
-        recMusicBox = new QWidget(scrollAreaWidgetContents);
+        recMusicBox = new RecBox(scrollAreaWidgetContents);
         recMusicBox->setObjectName("recMusicBox");
 
         verticalLayout_8->addWidget(recMusicBox);
@@ -448,7 +449,7 @@ public:
 
         verticalLayout_8->addWidget(supplyText);
 
-        supplyBox = new QWidget(scrollAreaWidgetContents);
+        supplyBox = new RecBox(scrollAreaWidgetContents);
         supplyBox->setObjectName("supplyBox");
 
         verticalLayout_8->addWidget(supplyBox);
