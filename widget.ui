@@ -826,55 +826,13 @@ QPushButton:hover
                 </property>
                </widget>
               </widget>
-              <widget class="QWidget" name="likePage">
-               <widget class="QLabel" name="label_4">
-                <property name="geometry">
-                 <rect>
-                  <x>270</x>
-                  <y>150</y>
-                  <width>40</width>
-                  <height>12</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-               </widget>
-              </widget>
-              <widget class="QWidget" name="localPage">
-               <widget class="QLabel" name="label_5">
-                <property name="geometry">
-                 <rect>
-                  <x>160</x>
-                  <y>160</y>
-                  <width>40</width>
-                  <height>12</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-               </widget>
-              </widget>
-              <widget class="QWidget" name="recentPage">
-               <widget class="QLabel" name="label_6">
-                <property name="geometry">
-                 <rect>
-                  <x>250</x>
-                  <y>110</y>
-                  <width>40</width>
-                  <height>12</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-               </widget>
-              </widget>
+              <widget class="CommonPage" name="likePage"/>
+              <widget class="CommonPage" name="localPage"/>
+              <widget class="CommonPage" name="recentPage"/>
              </widget>
             </item>
             <item>
-             <widget class="QWidget" name="progressBar" native="true">
+             <widget class="MusicSlider" name="progressBar" native="true">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -888,7 +846,7 @@ QPushButton:hover
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color:rgb(85, 170, 255);</string>
+               <string notr="true"/>
               </property>
              </widget>
             </item>
@@ -1220,6 +1178,18 @@ QPushButton:hover
    <class>RecBox</class>
    <extends>QWidget</extends>
    <header location="global">recbox.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CommonPage</class>
+   <extends>QWidget</extends>
+   <header location="global">commonpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MusicSlider</class>
+   <extends>QWidget</extends>
+   <header location="global">musicslider.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

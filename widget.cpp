@@ -39,8 +39,15 @@ void Widget::initUi()
     ui->local->initBtForm(":/images/local.png", "本地下载", 4);
     ui->recent->initBtForm(":/images/recent.png", "最近播放", 5);
 
+    // 初始化推荐图片
+    srand(time(NULL));
     ui->recMusicBox->initRecBoxUi(randomPiction(), 1);
     ui->supplyBox->initRecBoxUi(randomPiction(), 2);
+
+    // 设置 CommonPage 的信息
+    ui->likePage->setCommonPageUI("我喜欢", ":/images/ilikebg.png");
+    ui->localPage->setCommonPageUI("本地音乐", ":/images/localbg.png");
+    ui->recentPage->setCommonPageUI("最近播放", ":/images/recentbg.png");
 }
 
 void Widget::initConnect()

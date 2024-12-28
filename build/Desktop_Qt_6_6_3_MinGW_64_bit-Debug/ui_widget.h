@@ -22,6 +22,8 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include <btform.h>
+#include <commonpage.h>
+#include <musicslider.h>
 #include <recbox.h>
 
 QT_BEGIN_NAMESPACE
@@ -83,13 +85,10 @@ public:
     QLabel *label_2;
     QWidget *musicPage;
     QLabel *label_3;
-    QWidget *likePage;
-    QLabel *label_4;
-    QWidget *localPage;
-    QLabel *label_5;
-    QWidget *recentPage;
-    QLabel *label_6;
-    QWidget *progressBar;
+    CommonPage *likePage;
+    CommonPage *localPage;
+    CommonPage *recentPage;
+    MusicSlider *progressBar;
     QWidget *controlBox;
     QHBoxLayout *horizontalLayout_6;
     QWidget *play1;
@@ -468,32 +467,23 @@ public:
         label_3->setObjectName("label_3");
         label_3->setGeometry(QRect(260, 120, 40, 12));
         stackedWidget->addWidget(musicPage);
-        likePage = new QWidget();
+        likePage = new CommonPage();
         likePage->setObjectName("likePage");
-        label_4 = new QLabel(likePage);
-        label_4->setObjectName("label_4");
-        label_4->setGeometry(QRect(270, 150, 40, 12));
         stackedWidget->addWidget(likePage);
-        localPage = new QWidget();
+        localPage = new CommonPage();
         localPage->setObjectName("localPage");
-        label_5 = new QLabel(localPage);
-        label_5->setObjectName("label_5");
-        label_5->setGeometry(QRect(160, 160, 40, 12));
         stackedWidget->addWidget(localPage);
-        recentPage = new QWidget();
+        recentPage = new CommonPage();
         recentPage->setObjectName("recentPage");
-        label_6 = new QLabel(recentPage);
-        label_6->setObjectName("label_6");
-        label_6->setGeometry(QRect(250, 110, 40, 12));
         stackedWidget->addWidget(recentPage);
 
         verticalLayout_6->addWidget(stackedWidget);
 
-        progressBar = new QWidget(rightBody);
+        progressBar = new MusicSlider(rightBody);
         progressBar->setObjectName("progressBar");
         progressBar->setMinimumSize(QSize(0, 30));
         progressBar->setMaximumSize(QSize(16777215, 30));
-        progressBar->setStyleSheet(QString::fromUtf8("background-color:rgb(85, 170, 255);"));
+        progressBar->setStyleSheet(QString::fromUtf8(""));
 
         verticalLayout_6->addWidget(progressBar);
 
@@ -686,9 +676,6 @@ public:
         supplyText->setText(QCoreApplication::translate("MusicPlayer", "\344\275\240\347\232\204\351\237\263\344\271\220\350\241\245\347\273\231", nullptr));
         label_2->setText(QCoreApplication::translate("MusicPlayer", "TextLabel", nullptr));
         label_3->setText(QCoreApplication::translate("MusicPlayer", "TextLabel", nullptr));
-        label_4->setText(QCoreApplication::translate("MusicPlayer", "TextLabel", nullptr));
-        label_5->setText(QCoreApplication::translate("MusicPlayer", "TextLabel", nullptr));
-        label_6->setText(QCoreApplication::translate("MusicPlayer", "TextLabel", nullptr));
         musicName->setText(QCoreApplication::translate("MusicPlayer", "\346\255\214\345\220\215", nullptr));
         picture->setText(QCoreApplication::translate("MusicPlayer", "\345\233\276\347\211\207", nullptr));
         singerName->setText(QCoreApplication::translate("MusicPlayer", "\346\255\214\346\211\213", nullptr));

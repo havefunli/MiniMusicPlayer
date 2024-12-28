@@ -10,21 +10,33 @@ CONFIG += c++17
 
 SOURCES += \
     btform.cpp \
+    commonpage.cpp \
+    listitembox.cpp \
     main.cpp \
+    musicslider.cpp \
     recbox.cpp \
     recboxitem.cpp \
+    volumetool.cpp \
     widget.cpp
 
 HEADERS += \
     btform.h \
+    commonpage.h \
+    listitembox.h \
+    musicslider.h \
     recbox.h \
     recboxitem.h \
+    volumetool.h \
     widget.h
 
 FORMS += \
     btform.ui \
+    commonpage.ui \
+    listitembox.ui \
+    musicslider.ui \
     recbox.ui \
     recboxitem.ui \
+    volumetool.ui \
     widget.ui
 
 # Default rules for deployment.
