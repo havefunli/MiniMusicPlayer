@@ -865,7 +865,10 @@ QPushButton:hover
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true"/>
+               <string notr="true">QPushButton:hover
+{
+	background-color:#E3E3E3;
+}</string>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <property name="spacing">
@@ -926,7 +929,8 @@ QPushButton:hover
 QPushButton:hover
 {
 	background-color: #87CEFA;
-}</string>
+}
+</string>
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_8">
                   <item>

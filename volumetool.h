@@ -2,6 +2,7 @@
 #define VOLUMETOOL_H
 
 #include <QWidget>
+#include <QPainter>
 
 namespace Ui {
 class VolumeTool;

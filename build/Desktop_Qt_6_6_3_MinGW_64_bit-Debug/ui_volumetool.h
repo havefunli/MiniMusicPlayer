@@ -27,6 +27,7 @@ public:
     QWidget *volumeBox;
     QFrame *inLine;
     QFrame *outLine;
+    QPushButton *silderBtn;
 
     void setupUi(QWidget *VolumeTool)
     {
@@ -38,11 +39,27 @@ public:
         volumeWidget->setGeometry(QRect(10, 10, 80, 300));
         volumeWidget->setMinimumSize(QSize(80, 300));
         volumeWidget->setMaximumSize(QSize(80, 300));
+        volumeWidget->setStyleSheet(QString::fromUtf8("#volumeWidget\n"
+"{\n"
+"	background-color: #F0F0F0;\n"
+"	border-radius:5px;\n"
+"}"));
         silenceBtn = new QPushButton(volumeWidget);
         silenceBtn->setObjectName("silenceBtn");
         silenceBtn->setGeometry(QRect(0, 260, 80, 35));
         silenceBtn->setMinimumSize(QSize(80, 35));
         silenceBtn->setMaximumSize(QSize(80, 35));
+        silenceBtn->setStyleSheet(QString::fromUtf8("#silenceBtn\n"
+"{\n"
+"	border:none;\n"
+"}\n"
+"\n"
+"#silenceBtn:hover\n"
+"{\n"
+"	background-color:#e0e0e0;\n"
+"}\n"
+"\n"
+""));
         volumeRatio = new QLabel(volumeWidget);
         volumeRatio->setObjectName("volumeRatio");
         volumeRatio->setGeometry(QRect(0, 220, 80, 35));
@@ -58,13 +75,20 @@ public:
         inLine->setGeometry(QRect(38, 25, 4, 180));
         inLine->setMinimumSize(QSize(4, 0));
         inLine->setMaximumSize(QSize(4, 16777215));
+        inLine->setStyleSheet(QString::fromUtf8("background-color: #ececec;"));
         inLine->setFrameShape(QFrame::Shape::StyledPanel);
         inLine->setFrameShadow(QFrame::Shadow::Raised);
         outLine = new QFrame(volumeBox);
         outLine->setObjectName("outLine");
         outLine->setGeometry(QRect(38, 25, 4, 180));
+        outLine->setStyleSheet(QString::fromUtf8("background-color:#1ecc94;"));
         outLine->setFrameShape(QFrame::Shape::StyledPanel);
         outLine->setFrameShadow(QFrame::Shadow::Raised);
+        silderBtn = new QPushButton(volumeBox);
+        silderBtn->setObjectName("silderBtn");
+        silderBtn->setGeometry(QRect(33, 18, 14, 14));
+        silderBtn->setStyleSheet(QString::fromUtf8("border-radius:7px;\n"
+"background-color:#1ecc94;"));
 
         retranslateUi(VolumeTool);
 
@@ -74,8 +98,9 @@ public:
     void retranslateUi(QWidget *VolumeTool)
     {
         VolumeTool->setWindowTitle(QCoreApplication::translate("VolumeTool", "Form", nullptr));
-        silenceBtn->setText(QCoreApplication::translate("VolumeTool", "PushButton", nullptr));
+        silenceBtn->setText(QCoreApplication::translate("VolumeTool", "\351\235\231\351\237\263", nullptr));
         volumeRatio->setText(QCoreApplication::translate("VolumeTool", "45%", nullptr));
+        silderBtn->setText(QString());
     } // retranslateUi
 
 };

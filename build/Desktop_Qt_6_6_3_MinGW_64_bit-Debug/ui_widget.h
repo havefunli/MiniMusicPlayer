@@ -491,7 +491,10 @@ public:
         controlBox->setObjectName("controlBox");
         controlBox->setMinimumSize(QSize(0, 60));
         controlBox->setMaximumSize(QSize(16777215, 60));
-        controlBox->setStyleSheet(QString::fromUtf8(""));
+        controlBox->setStyleSheet(QString::fromUtf8("QPushButton:hover\n"
+"{\n"
+"	background-color:#E3E3E3;\n"
+"}"));
         horizontalLayout_6 = new QHBoxLayout(controlBox);
         horizontalLayout_6->setSpacing(0);
         horizontalLayout_6->setObjectName("horizontalLayout_6");
@@ -531,7 +534,8 @@ public:
 "QPushButton:hover\n"
 "{\n"
 "	background-color: #87CEFA;\n"
-"}"));
+"}\n"
+""));
         horizontalLayout_8 = new QHBoxLayout(play2);
         horizontalLayout_8->setObjectName("horizontalLayout_8");
         playMod = new QPushButton(play2);

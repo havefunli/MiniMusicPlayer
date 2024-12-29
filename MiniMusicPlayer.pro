@@ -13,6 +13,8 @@ SOURCES += \
     commonpage.cpp \
     listitembox.cpp \
     main.cpp \
+    music.cpp \
+    musiclist.cpp \
     musicslider.cpp \
     recbox.cpp \
     recboxitem.cpp \
@@ -23,6 +25,8 @@ HEADERS += \
     btform.h \
     commonpage.h \
     listitembox.h \
+    music.h \
+    musiclist.h \
     musicslider.h \
     recbox.h \
     recboxitem.h \

@@ -34,6 +34,13 @@
      <height>300</height>
     </size>
    </property>
+   <property name="styleSheet">
+    <string notr="true">#volumeWidget
+{
+	background-color: #F0F0F0;
+	border-radius:5px;
+}</string>
+   </property>
    <widget class="QPushButton" name="silenceBtn">
     <property name="geometry">
      <rect>
@@ -55,8 +62,21 @@
       <height>35</height>
      </size>
     </property>
+    <property name="styleSheet">
+     <string notr="true">#silenceBtn
+{
+	border:none;
+}
+
+#silenceBtn:hover
+{
+	background-color:#e0e0e0;
+}
+
+</string>
+    </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>静音</string>
     </property>
    </widget>
    <widget class="QLabel" name="volumeRatio">
@@ -123,6 +143,9 @@
        <height>16777215</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: #ececec;</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::Shape::StyledPanel</enum>
      </property>
@@ -139,11 +162,31 @@
        <height>180</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:#1ecc94;</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::Shape::StyledPanel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Shadow::Raised</enum>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="silderBtn">
+     <property name="geometry">
+      <rect>
+       <x>33</x>
+       <y>18</y>
+       <width>14</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius:7px;
+background-color:#1ecc94;</string>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>

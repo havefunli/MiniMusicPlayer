@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QList>
 #include <QDir>
+#include <QFileDialog>
 #include <QJsonObject>
 
 Widget::Widget(QWidget *parent)
@@ -48,6 +49,9 @@ void Widget::initUi()
     ui->likePage->setCommonPageUI("我喜欢", ":/images/ilikebg.png");
     ui->localPage->setCommonPageUI("本地音乐", ":/images/localbg.png");
     ui->recentPage->setCommonPageUI("最近播放", ":/images/recentbg.png");
+
+    // 设置声音调节弹窗
+    vt = new VolumeTool(this);
 }
 
 void Widget::initConnect()
@@ -60,7 +64,7 @@ void Widget::initConnect()
     connect(ui->recent, &BtForm::btClick, this, &Widget::onBtFormClick);
 }
 
-// move window when move mouse
+// 移动窗口
 void Widget::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
@@ -71,7 +75,7 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     QWidget::mouseMoveEvent(event);
 }
 
-// recorded pos when press mouse
+// 记录鼠标的位置
 void Widget::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
@@ -123,5 +127,35 @@ QJsonArray Widget::randomPiction()
         objArray.push_back(obj);
     }
     return objArray;
+}
+
+
+void Widget::on_volume_clicked()
+{
+    // 1. 获取全局坐标
+    QPoint gPoint = ui->volume->mapToGlobal(QPoint(0, 0));
+    // 2. 计算音量控件位置
+    QPoint volPoint = gPoint - QPoint(vt->width() / 3, vt->height());
+    // 3. 设置位置
+    vt->move(volPoint);
+    vt->show();
+}
+
+
+void Widget::on_addLocal_clicked()
+{
+    QFileDialog *fileDialog = new QFileDialog(this);
+
+    // 设置标题
+    fileDialog->setWindowTitle("添加本地音乐");
+    // 设置默认目录
+    fileDialog->setDirectory(QDir::currentPath());
+    // 可选择多个路径
+    fileDialog->setFileMode(QFileDialog::ExistingFiles);
+    // 获取选取的文件
+    if (fileDialog->exec() == QFileDialog::Accepted) {
+        QList<QUrl> fileUrls = fileDialog->selectedUrls();
+        musicList.addMusicByUrls(fileUrls);
+    }
 }
 

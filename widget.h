@@ -1,9 +1,11 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+#include "musiclist.h"
 #include <QMouseEvent>
 #include <QWidget>
 #include <QDebug>
+#include <volumetool.h>
 #include <QJsonArray>
 #include <QGraphicsDropShadowEffect>
 
@@ -37,8 +39,14 @@ private slots:
     QJsonArray randomPiction();
 
 
+    void on_volume_clicked();
+
+    void on_addLocal_clicked();
+
 private:
     Ui::MusicPlayer *ui;
-    QPoint dragPosition; // recored mouse pos
+    QPoint          dragPosition; // recored mouse pos
+    VolumeTool      *vt;          // 声音弹窗
+    MusicList       musicList;    // 管理的音乐
 };
 #endif // WIDGET_H
