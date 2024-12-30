@@ -402,8 +402,10 @@ Makefile: ../../MiniMusicPlayer.pro A:/QT/6.6.3/mingw_64/mkspecs/win32-g++/qmake
 		A:/QT/6.6.3/mingw_64/mkspecs/features/yacc.prf \
 		A:/QT/6.6.3/mingw_64/mkspecs/features/lex.prf \
 		../../MiniMusicPlayer.pro \
+		A:/QT/6.6.3/mingw_64/lib/Qt6Multimedia.prl \
 		A:/QT/6.6.3/mingw_64/lib/Qt6Widgets.prl \
 		A:/QT/6.6.3/mingw_64/lib/Qt6Gui.prl \
+		A:/QT/6.6.3/mingw_64/lib/Qt6Network.prl \
 		A:/QT/6.6.3/mingw_64/lib/Qt6Core.prl \
 		A:/QT/6.6.3/mingw_64/lib/Qt6EntryPoint.prl \
 		A:/QT/6.6.3/mingw_64/mkspecs/features/build_pass.prf \
@@ -741,8 +743,10 @@ A:/QT/6.6.3/mingw_64/mkspecs/features/exceptions.prf:
 A:/QT/6.6.3/mingw_64/mkspecs/features/yacc.prf:
 A:/QT/6.6.3/mingw_64/mkspecs/features/lex.prf:
 ../../MiniMusicPlayer.pro:
+A:/QT/6.6.3/mingw_64/lib/Qt6Multimedia.prl:
 A:/QT/6.6.3/mingw_64/lib/Qt6Widgets.prl:
 A:/QT/6.6.3/mingw_64/lib/Qt6Gui.prl:
+A:/QT/6.6.3/mingw_64/lib/Qt6Network.prl:
 A:/QT/6.6.3/mingw_64/lib/Qt6Core.prl:
 A:/QT/6.6.3/mingw_64/lib/Qt6EntryPoint.prl:
 A:/QT/6.6.3/mingw_64/mkspecs/features/build_pass.prf:

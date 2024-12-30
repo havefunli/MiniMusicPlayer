@@ -13,6 +13,7 @@ debug/qrc_resources.o
 debug/moc_btform.o
 debug/moc_commonpage.o
 debug/moc_listitembox.o
+debug/moc_music.o
 debug/moc_musicslider.o
 debug/moc_recbox.o
 debug/moc_recboxitem.o

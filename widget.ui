@@ -104,7 +104,6 @@
              <string notr="true">#logo
 {
 	background-image:url(&quot;:/images/Logo.png&quot;);
-	background-size: cover;
 	background-repeat: no-repeat;
 	background-position:center;	
 }</string>

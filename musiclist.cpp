@@ -14,7 +14,8 @@ void MusicList::addMusicByUrl(const QUrl &url)
     QMimeType mimeType = mimeDB.mimeTypeForFile(url.toLocalFile());
     QString mime = mimeType.name();
 
-    if (mime == "audio/mepg" || mime == "audio/flac" || mime == "audio/wav") {
+    if (mime == "audio/mpeg" || mime == "audio/flac" || mime == "audio/wav") {
+        qDebug() << url << ": " << mime;
         musicVec.push_back(Music(url));
     }
 }
@@ -25,3 +26,4 @@ void MusicList::addMusicByUrls(const QList<QUrl> &urls)
         addMusicByUrl(url);
     }
 }
+// 获取什么呀  歌曲信息 好的我演示一下   你这个只是八歌曲加载进来了  并没有通过代码获取歌曲的作者 之类的信息  是这样的 使用 Music 构造函数还获取

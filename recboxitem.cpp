@@ -25,8 +25,9 @@ void RecBoxItem::setRecImage(const QString &path)
     ui->recMusicImage->setScaledContents(true);
 }
 
-void RecBoxItem::enterEvent(QEnterEvent *event)
+void RecBoxItem::enterEvent(QEvent *event)
 {
+    (void)event;
     // qDebug() << "你的鼠标进入了";
     // 动画效果
     QPropertyAnimation *animal = new QPropertyAnimation(ui->imageBox, "geometry");
@@ -43,6 +44,7 @@ void RecBoxItem::enterEvent(QEnterEvent *event)
 
 void RecBoxItem::leaveEvent(QEvent *event)
 {
+    (void)event;
     // qDebug() << "你的鼠标离开了";
     // 动画效果
     QPropertyAnimation *animal = new QPropertyAnimation(ui->imageBox, "geometry");

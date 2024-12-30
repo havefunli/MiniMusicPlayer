@@ -150,7 +150,6 @@ public:
         logo->setStyleSheet(QString::fromUtf8("#logo\n"
 "{\n"
 "	background-image:url(\":/images/Logo.png\");\n"
-"	background-size: cover;\n"
 "	background-repeat: no-repeat;\n"
 "	background-position:center;	\n"
 "}"));

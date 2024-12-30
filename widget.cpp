@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QJsonObject>
 
+#include "music.h"
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MusicPlayer)
@@ -13,6 +15,10 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
     initUi();
     initConnect();
+
+    // TEST
+    QUrl url = QUrl::fromLocalFile("C:/Users/acer/Desktop/Project/MiniMusicPlayer/musics/2002年的第一场雪 - 刀郎.mp3");
+    Music music(url);
 }
 
 Widget::~Widget()
@@ -69,7 +75,7 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        move(event->globalPosition().toPoint() - dragPosition);
+        move(event->globalPos() - dragPosition);
     }
     // qDebug() << "Move mouse, dragPosition =" << dragPosition;
     QWidget::mouseMoveEvent(event);
@@ -81,7 +87,7 @@ void Widget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
         // 鼠标的全局位置 - 窗口左上角的位置 = 鼠标在窗口的相对位置
-        dragPosition = event->globalPosition().toPoint() - geometry().topLeft();
+        dragPosition = event->globalPos() - geometry().topLeft();
     }
     // qDebug() << "Press mouse, dragPosition =" << dragPosition;
     QWidget::mousePressEvent(event);

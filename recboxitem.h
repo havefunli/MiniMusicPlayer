@@ -20,7 +20,7 @@ public:
     void setRecImage(const QString&);
 
 protected:
-    void enterEvent(QEnterEvent *) override;
+    void enterEvent(QEvent *) override;
     void leaveEvent(QEvent *) override;
 
 private:
