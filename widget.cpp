@@ -6,8 +6,6 @@
 #include <QFileDialog>
 #include <QJsonObject>
 
-#include "music.h"
-
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MusicPlayer)
@@ -15,10 +13,6 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
     initUi();
     initConnect();
-
-    // TEST
-    QUrl url = QUrl::fromLocalFile("C:/Users/acer/Desktop/Project/MiniMusicPlayer/musics/2002年的第一场雪 - 刀郎.mp3");
-    Music music(url);
 }
 
 Widget::~Widget()
@@ -52,8 +46,13 @@ void Widget::initUi()
     ui->supplyBox->initRecBoxUi(randomPiction(), 2);
 
     // 设置 CommonPage 的信息
+    ui->likePage->setMusicListType(PageType::LIKE_PAGE);
     ui->likePage->setCommonPageUI("我喜欢", ":/images/ilikebg.png");
+
+    ui->localPage->setMusicListType(PageType::LOCAL_PAGE);
     ui->localPage->setCommonPageUI("本地音乐", ":/images/localbg.png");
+
+    ui->recentPage->setMusicListType(PageType::HISTORY_PAGE);
     ui->recentPage->setCommonPageUI("最近播放", ":/images/recentbg.png");
 
     // 设置声音调节弹窗
@@ -68,6 +67,11 @@ void Widget::initConnect()
     connect(ui->like, &BtForm::btClick, this, &Widget::onBtFormClick);
     connect(ui->local, &BtForm::btClick, this, &Widget::onBtFormClick);
     connect(ui->recent, &BtForm::btClick, this, &Widget::onBtFormClick);
+
+    // 处理喜欢音乐的改变
+    connect(ui->localPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
+    connect(ui->likePage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
+    connect(ui->recentPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
 }
 
 // 移动窗口
@@ -135,6 +139,18 @@ QJsonArray Widget::randomPiction()
     return objArray;
 }
 
+void Widget::upDateLikeMusicAndPage(const QString &musicID, const bool isLike)
+{
+    Music *music = musicList.findMusicById(musicID);
+    if (music == nullptr) {
+        return;
+    }
+    music->setLike(isLike);
+    ui->likePage->reFresh(musicList);
+    ui->recentPage->reFresh(musicList);
+    ui->localPage->reFresh(musicList);
+}
+
 
 void Widget::on_volume_clicked()
 {
@@ -155,13 +171,19 @@ void Widget::on_addLocal_clicked()
     // 设置标题
     fileDialog->setWindowTitle("添加本地音乐");
     // 设置默认目录
-    fileDialog->setDirectory(QDir::currentPath());
+    fileDialog->setDirectory("C:\\Users\acer\\Desktop\\Project\\MiniMusicPlayer\\musics");
     // 可选择多个路径
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
     // 获取选取的文件
     if (fileDialog->exec() == QFileDialog::Accepted) {
         QList<QUrl> fileUrls = fileDialog->selectedUrls();
+        // 将选中的文件内容解析为 Music 对象，交由 musicList 管理
         musicList.addMusicByUrls(fileUrls);
+        // 将窗口切换为本地下载
+        ui->stackedWidget->setCurrentIndex(4);
+        // 刷新音乐显示
+        ui->localPage->reFresh(musicList);
     }
+
 }
 

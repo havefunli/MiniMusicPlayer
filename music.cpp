@@ -16,7 +16,7 @@ Music::Music(QUrl url)
 {
     // 初始化一个 musicID
     musicID = QUuid::createUuid().toString();
-    // parseMediaMetaMusic();
+    parseMediaMetaMusic();
 }
 
 void Music::setMusicName(const QString &name)
@@ -100,21 +100,46 @@ void Music::parseMediaMetaMusic()
     QMediaPlayer player;
 
     // 2. 设置媒体源（音乐文件 URL）
-    // player.;
+    player.setMedia(musicUrl);
 
     // 3.等待数据加载
-    while (!player.isAvailable()) {
+    while (!player.isMetaDataAvailable()) {
+        QCoreApplication::processEvents();
     }
 
-    // 4. 输出加载信息   你QT是哪版本的 6 和老师的不一样
-    // 用5.14的版本吧   QT6 把播放列表类移除了  你后续播放列表没有办法实现 那现在怎么回退版本呢？重新安装个5。14的
-    if (player.isAvailable()){
-        //musicName = player.metaData().value(QMediaMetaData::Duration).toString();
-        // musicName = player.metaData("Duration").toString();
-        qDebug() << musicName<<"xxx";
+    // 4. 输出加载信息
+    if (player.isMetaDataAvailable()){
+        musicName = player.metaData("Title").toString();
+        musicSinger = player.metaData("Author").toString();
+        musicAlbum = player.metaData("AlbumTitle").toString();
+        duration = player.metaData("duration").toLongLong();
+        qDebug() << musicName << " " << musicSinger << " " << musicAlbum << " " << duration;
     }
 
-    // 5. 开始播放以触发元数据加载
-    player.play();
+    // 5. 手动输入信息
+    QString fileName = musicUrl.fileName();
+    int index = fileName.indexOf('-');
+    // 歌名为空
+    if (musicName.isEmpty()) {
+        if (index != -1) {
+            musicName = fileName.mid(0, index).trimmed();
+        } else {
+            musicName = fileName.mid(0, fileName.indexOf('.')).trimmed();
+        }
+    }
+
+    // 作者为空
+    if(musicSinger.isEmpty()) {
+        if (index != -1) {
+            musicSinger = fileName.mid(index + 2, fileName.indexOf('.') - index - 2).trimmed();
+        } else {
+            musicSinger = "未知歌手";
+        }
+    }
+
+    // 专辑为空
+    if (musicAlbum.isEmpty()) {
+        musicAlbum = "未知专辑";
+    }
 }
 

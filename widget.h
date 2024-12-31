@@ -38,9 +38,10 @@ private slots:
     // 推荐图片音频构造
     QJsonArray randomPiction();
 
+    // 更新喜欢的音乐
+    void upDateLikeMusicAndPage(const QString&, const bool);
 
     void on_volume_clicked();
-
     void on_addLocal_clicked();
 
 private:

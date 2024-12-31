@@ -10,8 +10,13 @@ class MusicList
 public:
     MusicList();
 
+    size_t size() const;
     void addMusicByUrl(const QUrl&);
     void addMusicByUrls(const QList<QUrl>&);
+
+    Music &operator[](int);
+
+    Music *findMusicById(const QString&);
 
 private:
     QVector<Music> musicVec;
