@@ -2,6 +2,7 @@
 #define COMMONPAGE_H
 
 #include <QWidget>
+#include <QMediaPlaylist>
 #include "musiclist.h"
 
 namespace Ui {
@@ -10,7 +11,7 @@ class CommonPage;
 
 enum PageType
 {
-    LIKE_PAGE,      // 我喜欢
+    LIKE_PAGE,      // 喜欢
     LOCAL_PAGE,     // 本地
     HISTORY_PAGE    // 历史播放
 };
@@ -29,6 +30,8 @@ public:
     void addMusicToMusicPage(MusicList&);
     // 更新音乐到界面
     void reFresh(MusicList &musicList);
+    // 更新音乐到播放列表
+    void addMusicToPlaylist(MusicList&, QMediaPlaylist*);
 
 signals:
     void upDateLikeMusic(const QString&, const bool);

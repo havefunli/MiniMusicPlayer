@@ -31,6 +31,8 @@ void CommonPage::setMusicListType(PageType type)
 
 void CommonPage::addMusicToMusicPage(MusicList &musicList)
 {
+    // 清除原来数组存储 的内容，避免重复
+    musicOfPage.clear();
     for (size_t i = 0; i < musicList.size(); i++) {
         Music music = musicList[i];
 
@@ -50,13 +52,16 @@ void CommonPage::addMusicToMusicPage(MusicList &musicList)
                 }
             break;
         }
-
     }
 }
 
 void CommonPage::reFresh(MusicList &musicList)
 {
+     // 清除原来界面的内容
+     ui->pageMusicList->clear();
+
      addMusicToMusicPage(musicList);
+
      for (auto &musicId : musicOfPage) {
          Music *music = musicList.findMusicById(musicId);
          if (music == nullptr) {
@@ -83,4 +88,28 @@ void CommonPage::reFresh(MusicList &musicList)
              emit upDateLikeMusic(music->getMusicId(), isLike);
          });
      }
+}
+
+void CommonPage::addMusicToPlaylist(MusicList &musicList, QMediaPlaylist *playList)
+{
+    for (size_t i = 0; i < musicList.size(); i++) {
+        Music music = musicList[i];
+
+        switch(type)
+        {
+            case LIKE_PAGE:
+                if (music.getLike()) {
+                    playList->addMedia(music.getMusicQUrl());
+                }
+                break;
+            case LOCAL_PAGE:
+                playList->addMedia(music.getMusicQUrl());
+                break;
+            case HISTORY_PAGE:
+                if (music.getHistory()) {
+                    playList->addMedia(music.getMusicQUrl());
+                }
+            break;
+        }
+    }
 }

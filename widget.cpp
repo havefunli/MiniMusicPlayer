@@ -9,9 +9,12 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MusicPlayer)
+    , player(new QMediaPlayer(this))
+    , playList(new QMediaPlaylist(this))
 {
     ui->setupUi(this);
     initUi();
+    initPlayer();
     initConnect();
 }
 
@@ -55,12 +58,20 @@ void Widget::initUi()
     ui->recentPage->setMusicListType(PageType::HISTORY_PAGE);
     ui->recentPage->setCommonPageUI("最近播放", ":/images/recentbg.png");
 
+    // 播放工具栏处理
+    ui->play->setIcon(QIcon(":images/play_2.png"));
+    ui->play->setIconSize(QSize(ui->play->width(), ui->play->height()));
+
+    ui->playMod->setIcon(QIcon(":/images/list_play.png"));
+    ui->playMod->setIconSize(QSize(ui->playMod->width(), ui->playMod->height()));
+
     // 设置声音调节弹窗
     vt = new VolumeTool(this);
 }
 
 void Widget::initConnect()
 {
+    // 界面切换处理信号
     connect(ui->recommend, &BtForm::btClick, this, &Widget::onBtFormClick);
     connect(ui->radio, &BtForm::btClick, this, &Widget::onBtFormClick);
     connect(ui->music, &BtForm::btClick, this, &Widget::onBtFormClick);
@@ -72,6 +83,25 @@ void Widget::initConnect()
     connect(ui->localPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
     connect(ui->likePage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
     connect(ui->recentPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
+
+    // 播放相关槽函数
+    // 播放按钮
+    connect(ui->play, &QPushButton::clicked, this, &Widget::onPlayMusic);
+    // 上一首下一首
+    connect(ui->playUp, &QPushButton::clicked, this, &Widget::onPlayUpClicked);
+    connect(ui->playDown, &QPushButton::clicked, this, &Widget::onPlayDownClicked);
+    // 播放模式
+    connect(ui->playMod, &QPushButton::clicked, this, &Widget::onPlayBackModeClicked);
+}
+
+void Widget::initPlayer()
+{
+    // 1. 设置播放模式
+    playList->setPlaybackMode(QMediaPlaylist::Loop);
+    // 2. 设置播放列表
+    player->setPlaylist(playList);
+    // 3. 设置初始音量
+    player->setVolume(20);
 }
 
 // 移动窗口
@@ -183,7 +213,55 @@ void Widget::on_addLocal_clicked()
         ui->stackedWidget->setCurrentIndex(4);
         // 刷新音乐显示
         ui->localPage->reFresh(musicList);
+        // 将本地音乐添加到播放列表
+        ui->localPage->addMusicToPlaylist(musicList, playList);
     }
+}
 
+// 播放和暂停
+// 切换音乐播放状态和音乐图标
+void Widget::onPlayMusic()
+{
+    if (QMediaPlayer::PlayingState == player->state()) {
+        player->pause();
+        ui->play->setIcon(QIcon(":/images/play3.png"));
+    } else if(QMediaPlayer::PausedState == player->state()) {
+        player->play();
+        ui->play->setIcon(QIcon(":/images/play_on.png"));
+    } else if(QMediaPlayer::StoppedState == player->state()) {
+        player->play();
+        ui->play->setIcon(QIcon(":/images/play_on.png"));
+    } else {
+        qDebug() << player->errorString();
+        ui->play->setIcon(QIcon(":/images/play3.png"));
+    }
+    ui->play->setIconSize(QSize(ui->play->width(), ui->play->height()));
+}
+
+void Widget::onPlayUpClicked()
+{
+    playList->previous();
+}
+
+void Widget::onPlayDownClicked()
+{
+    playList->next();
+}
+
+void Widget::onPlayBackModeClicked()
+{
+    // 循环 随机 单曲 三者循环
+    if (playList->playbackMode() == QMediaPlaylist::Loop) {
+        playList->setPlaybackMode(QMediaPlaylist::Random);
+        ui->playMod->setIcon(QIcon(":/images/shuffle_2.png"));
+    } else if (playList->playbackMode() == QMediaPlaylist::Random) {
+        playList->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
+        ui->playMod->setIcon(QIcon(":/images/single_play.png"));
+    } else if (playList->playbackMode() == QMediaPlaylist::CurrentItemOnce) {
+        playList->setPlaybackMode(QMediaPlaylist::Loop);
+        ui->playMod->setIcon(QIcon(":/images/list_play.png"));
+    } else {
+        qDebug() << "Mode error";
+    }
 }
 
