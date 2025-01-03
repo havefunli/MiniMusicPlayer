@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include "musiclist.h"
+#include "commonpage.h"
 #include <QMouseEvent>
 #include <QWidget>
 #include <QDebug>
@@ -30,6 +31,10 @@ public:
     void initConnect();
     void initPlayer();
 
+private:
+    void playAllMusicOfCommonPage(CommonPage*, int);
+    void recordHistory(const QMediaContent&);
+
 protected:
     void mouseMoveEvent(QMouseEvent*);
     void mousePressEvent(QMouseEvent*);
@@ -53,6 +58,11 @@ private slots:
     void onPlayUpClicked();    // 上一首
     void onPlayDownClicked();  // 下一首
     void onPlayBackModeClicked(); // 播放模式
+    void onPlayAll(PageType);    // 播放全部
+    void onMusicStateChanged(QMediaPlayer::State);
+    void playMusicByIndex(CommonPage*, int); // 点击播放全部，双击音乐
+
+    void setPlayerMuted(bool); // 设置静音
 
 private:
     Ui::MusicPlayer *ui;

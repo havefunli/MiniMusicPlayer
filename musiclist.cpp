@@ -47,3 +47,13 @@ Music *MusicList::findMusicById(const QString &id)
     return nullptr;
 }
 
+Music *MusicList::findMUsicByQUrl(const QUrl &url)
+{
+    for (auto &music : musicVec) {
+        if (music.getMusicQUrl() == url) {
+            return &music;
+        }
+    }
+    return nullptr;
+}
+

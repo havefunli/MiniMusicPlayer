@@ -85,6 +85,8 @@ void Widget::initConnect()
     connect(ui->recentPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
 
     // 播放相关槽函数
+    // 音乐状态的改变引起按钮的变化
+    connect(player, &QMediaPlayer::stateChanged, this, &Widget::onMusicStateChanged);
     // 播放按钮
     connect(ui->play, &QPushButton::clicked, this, &Widget::onPlayMusic);
     // 上一首下一首
@@ -92,6 +94,18 @@ void Widget::initConnect()
     connect(ui->playDown, &QPushButton::clicked, this, &Widget::onPlayDownClicked);
     // 播放模式
     connect(ui->playMod, &QPushButton::clicked, this, &Widget::onPlayBackModeClicked);
+    // 播放全部
+    connect(ui->likePage, &CommonPage::playAll, this, &Widget::onPlayAll);
+    connect(ui->localPage, &CommonPage::playAll, this, &Widget::onPlayAll);
+    connect(ui->recentPage, &CommonPage::playAll, this, &Widget::onPlayAll);
+    // 双击处理
+    connect(ui->likePage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
+    connect(ui->localPage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
+    connect(ui->recentPage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
+    // 记录历史播放
+    connect(player, &QMediaPlayer::currentMediaChanged, this, &Widget::recordHistory);
+    // 处理静音
+    connect(vt, &VolumeTool::setMusicMuted, this, &Widget::setPlayerMuted);
 }
 
 void Widget::initPlayer()
@@ -102,6 +116,33 @@ void Widget::initPlayer()
     player->setPlaylist(playList);
     // 3. 设置初始音量
     player->setVolume(20);
+}
+
+void Widget::playAllMusicOfCommonPage(CommonPage *page, int index)
+{
+    // 清空 playlist 歌曲
+    playList->clear();
+    // 添加当前页音乐
+    page->addMusicToPlaylist(musicList, playList);
+    // 从 0 开始播放, 设置播放模式
+    playList->setCurrentIndex(index);
+    playList->setPlaybackMode(QMediaPlaylist::Loop);
+
+    player->play();
+}
+
+void Widget::recordHistory(const QMediaContent &content)
+{
+    // 媒体内容中包含多个资源，需要我们处理
+    // 重定向前，重定向后
+    QUrl url = content.request().url();
+    Music *music = musicList.findMUsicByQUrl(url);
+    if (music) {
+        music->setHistory(true);
+        ui->recentPage->reFresh(musicList);
+    } else {
+        qDebug() << "Widget::recordHistory";
+    }
 }
 
 // 移动窗口
@@ -218,6 +259,7 @@ void Widget::on_addLocal_clicked()
     }
 }
 
+
 // 播放和暂停
 // 切换音乐播放状态和音乐图标
 void Widget::onPlayMusic()
@@ -238,7 +280,7 @@ void Widget::onPlayMusic()
     ui->play->setIconSize(QSize(ui->play->width(), ui->play->height()));
 }
 
-void Widget::onPlayUpClicked()
+void Widget:: onPlayUpClicked()
 {
     playList->previous();
 }
@@ -263,5 +305,46 @@ void Widget::onPlayBackModeClicked()
     } else {
         qDebug() << "Mode error";
     }
+}
+
+void Widget::onPlayAll(PageType pageType)
+{
+    CommonPage *page = nullptr;
+    // 判断是哪一个界面
+    switch(pageType) {
+        case PageType::LIKE_PAGE:
+            page = ui->likePage;
+            break;
+        case PageType::LOCAL_PAGE:
+            page = ui->localPage;
+            break;
+        case PageType::HISTORY_PAGE:
+            page = ui->recentPage;
+            break;
+        default:
+            qDebug() << "页面不支持";
+    }
+    playAllMusicOfCommonPage(page, 0);
+}
+
+void Widget::onMusicStateChanged(QMediaPlayer::State state)
+{
+    if (state == QMediaPlayer::State::PlayingState) {
+        ui->play->setIcon(QIcon(":/images/play_on.png"));
+    } else if (state == QMediaPlayer::State::PausedState
+               || state == QMediaPlayer::State::StoppedState) {
+        ui->play->setIcon(QIcon(":/images/play3.png"));
+    }
+    ui->play->setIconSize(QSize(ui->play->width(), ui->play->height()));
+}
+
+void Widget::playMusicByIndex(CommonPage *page, int index)
+{
+    playAllMusicOfCommonPage(page, index);
+}
+
+void Widget::setPlayerMuted(bool isMuted)
+{
+    player->setMuted(isMuted);
 }
 

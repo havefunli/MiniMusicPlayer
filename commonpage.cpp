@@ -9,6 +9,11 @@ CommonPage::CommonPage(QWidget *parent)
 {
     ui->setupUi(this);
     ui->pageMusicList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // 鼠标双击信号槽
+    connect(ui->pageMusicList, &QListWidget::doubleClicked, this, [=](const QModelIndex &index){
+        emit playMusicByIndex(this, index.row());
+    });
 }
 
 CommonPage::~CommonPage()
@@ -112,4 +117,9 @@ void CommonPage::addMusicToPlaylist(MusicList &musicList, QMediaPlaylist *playLi
             break;
         }
     }
+}
+
+void CommonPage::on_playBtn_clicked()
+{
+    emit playAll(type);
 }

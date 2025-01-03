@@ -35,6 +35,12 @@ public:
 
 signals:
     void upDateLikeMusic(const QString&, const bool);
+    void playAll(PageType);
+    void playMusicByIndex(CommonPage*, int);
+
+private slots:
+    // 播放全部按钮
+    void on_playBtn_clicked();
 
 private:
     Ui::CommonPage *ui;

@@ -18,6 +18,8 @@ public:
 
     Music *findMusicById(const QString&);
 
+    Music *findMUsicByQUrl(const QUrl&);
+
 private:
     QVector<Music> musicVec;
 };
