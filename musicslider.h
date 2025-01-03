@@ -15,6 +15,11 @@ public:
     explicit MusicSlider(QWidget *parent = nullptr);
     ~MusicSlider();
 
+protected:
+    void mousePressEvent(QMouseEvent *) override;
+    void mouseReleaseEvent(QMouseEvent *) override;
+    void mouseMoveEvent(QMouseEvent *) override;
+
 private:
     Ui::MusicSlider *ui;
 };

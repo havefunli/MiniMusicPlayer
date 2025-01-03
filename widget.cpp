@@ -106,6 +106,12 @@ void Widget::initConnect()
     connect(player, &QMediaPlayer::currentMediaChanged, this, &Widget::recordHistory);
     // 处理静音
     connect(vt, &VolumeTool::setMusicMuted, this, &Widget::setPlayerMuted);
+    // 处理音量修改
+    connect(vt, &VolumeTool::setMusicVolume, this, &Widget::setPlayerVolume);
+    // 音乐切换
+    connect(player, &QMediaPlayer::durationChanged, this, &Widget::onDurationChanged);
+    // 播放进度改变
+    connect(player, &QMediaPlayer::positionChanged, this, &Widget::onPositionChanged);
 }
 
 void Widget::initPlayer()
@@ -346,5 +352,30 @@ void Widget::playMusicByIndex(CommonPage *page, int index)
 void Widget::setPlayerMuted(bool isMuted)
 {
     player->setMuted(isMuted);
+}
+
+void Widget::setPlayerVolume(int volume)
+{
+    player->setVolume(volume);
+}
+
+void Widget::onDurationChanged(qint64 duration)
+{
+    // 获取分秒
+    int min = duration / 1000 / 60;
+    int sec = duration / 1000 % 60;
+    // 更新界面
+    ui->totalTime->setText(QString("%1:%2").arg(min, 2, 10, QChar('0'))
+                           .arg(sec, 2, 10, QChar('0')));
+}
+
+void Widget::onPositionChanged(qint64 duration)
+{
+    // 获取分秒
+    int min = duration / 1000 / 60;
+    int sec = duration / 1000 % 60;
+    // 更新界面
+    ui->currentTime->setText(QString("%1:%2").arg(min, 2, 10, QChar('0'))
+                           .arg(sec, 2, 10, QChar('0')));
 }
 

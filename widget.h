@@ -63,6 +63,10 @@ private slots:
     void playMusicByIndex(CommonPage*, int); // 点击播放全部，双击音乐
 
     void setPlayerMuted(bool); // 设置静音
+    void setPlayerVolume(int); // 设置音量
+
+    void onDurationChanged(qint64); // 播放音乐切换
+    void onPositionChanged(qint64); // 播放进度变化
 
 private:
     Ui::MusicPlayer *ui;

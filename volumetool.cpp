@@ -20,6 +20,9 @@ VolumeTool::VolumeTool(QWidget *parent)
      shadowEffect->setOffset(0, 0);
      setGraphicsEffect(shadowEffect);
 
+    // 开启事件捕获
+    ui->volumeBox->installEventFilter(this);
+
     // 设置图标
     ui->silenceBtn->setIcon(QIcon(":/images/volumn.png"));
     // 默认音量
@@ -41,10 +44,14 @@ bool VolumeTool::eventFilter(QObject *watched, QEvent *event)
     if (ui->volumeBox == watched) {
         if (event->type() == QEvent::MouseButtonPress) {
             // 鼠标按下
+            calcVolume();
         } else if (event->type() == QEvent::MouseButtonRelease) {
             // 鼠标释放
+            emit setMusicVolume(volumeRatio);
         } else if (event->type() == QEvent::MouseMove) {
             // 鼠标移动
+            calcVolume();
+            emit setMusicVolume(volumeRatio);
         }
         return true;
     }
@@ -54,8 +61,19 @@ bool VolumeTool::eventFilter(QObject *watched, QEvent *event)
 
 void VolumeTool::calcVolume()
 {
+    // 获取鼠标点击的 y 坐标(在控件内的)
+    int height = ui->volumeBox->mapFromGlobal(QCursor().pos()).y();
+    // height 的范围必须要在 [25, 205]
+    height = height > 205 ? 205 : height;
+    height = height < 25 ? 25 : height;
+    // 设置 outline ui
+    ui->outLine->setGeometry(ui->outLine->x(), height, ui->outLine->width(), 205 - height);
+    // 设置 silderBtn 的位置
+    ui->silderBtn->move(ui->silderBtn->x(), ui->outLine->y() - ui->silderBtn->height() / 2);
     // 设置音量大小
-    // 设置界面显示
+    volumeRatio = (int)(ui->outLine->height() / (float)180 * 100);
+    // 设置音量显示
+    ui->volumeRatio->setText(QString::number(volumeRatio) + "%");
 }
 
 

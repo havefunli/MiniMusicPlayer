@@ -12,3 +12,18 @@ MusicSlider::~MusicSlider()
 {
     delete ui;
 }
+
+void MusicSlider::mousePressEvent(QMouseEvent *)
+{
+
+}
+
+void MusicSlider::mouseReleaseEvent(QMouseEvent *)
+{
+
+}
+
+void MusicSlider::mouseMoveEvent(QMouseEvent *)
+{
+
+}
