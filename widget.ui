@@ -1175,7 +1175,7 @@ QPushButton:hover
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="volume_2">
+                 <widget class="QPushButton" name="lrcWord">
                   <property name="minimumSize">
                    <size>
                     <width>30</width>

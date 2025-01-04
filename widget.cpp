@@ -32,7 +32,7 @@ void Widget::initUi()
     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
     shadow->setOffset(0, 0);
     shadow->setColor("black");
-    shadow->setBlurRadius(20);
+    shadow->setBlurRadius(10);
     setGraphicsEffect(shadow);
 
     // 设置图片和文本
@@ -67,6 +67,17 @@ void Widget::initUi()
 
     // 设置声音调节弹窗
     vt = new VolumeTool(this);
+
+    // 设置歌词窗口
+    lrc = new LrcPage(this);
+    lrc->setGeometry(10, 10, lrc->width(), lrc->height());
+    lrc->hide();
+
+    // 上移动画对象
+    lrcAnimation = new QPropertyAnimation(lrc, "geometry", this);
+    lrcAnimation->setDuration(250);
+    lrcAnimation->setStartValue(QRect(10, 10 + lrc->height(), lrc->width(), lrc->height()));
+    lrcAnimation->setEndValue(QRect(10, 10, lrc->width(), lrc->height()));
 }
 
 void Widget::initConnect()
@@ -83,6 +94,9 @@ void Widget::initConnect()
     connect(ui->localPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
     connect(ui->likePage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
     connect(ui->recentPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
+
+    // 点击显示 Lrc
+    connect(ui->lrcWord, &QPushButton::clicked, this, &Widget::onLrcWordClicked);
 
     // 播放相关槽函数
     // 音乐状态的改变引起按钮的变化
@@ -272,6 +286,12 @@ void Widget::on_addLocal_clicked()
     }
 }
 
+void Widget::onLrcWordClicked()
+{
+    lrc->show();
+    lrcAnimation->start();
+}
+
 
 // 播放和暂停
 // 切换音乐播放状态和音乐图标
@@ -429,5 +449,4 @@ void Widget::onMediaChanged(const QMediaContent &content)
         ui->picture->setScaledContents(true);
     });
 }
-
 

@@ -3,6 +3,7 @@
 
 #include "musiclist.h"
 #include "commonpage.h"
+#include "lrcpage.h"
 #include <QMouseEvent>
 #include <QWidget>
 #include <QDebug>
@@ -12,6 +13,8 @@
 
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
+
+#include <QPropertyAnimation>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -53,6 +56,9 @@ private slots:
     void on_volume_clicked();
     void on_addLocal_clicked();
 
+    // Lrc 界面点击显示
+    void onLrcWordClicked();
+
     // 播放相关槽函数
     void onPlayMusic(); // 播放状态
     void onPlayUpClicked();    // 上一首
@@ -76,8 +82,11 @@ private:
     Ui::MusicPlayer *ui;
     QPoint          dragPosition; // recored mouse pos
     VolumeTool      *vt;          // 声音弹窗
+    LrcPage         *lrc;         // 歌词窗口
     MusicList       musicList;    // 管理的音乐
     QMediaPlayer    *player;      // 播放器
     QMediaPlaylist  *playList;    // 播放列表
+
+    QPropertyAnimation *lrcAnimation; // 窗口上移动画
 };
 #endif // WIDGET_H
