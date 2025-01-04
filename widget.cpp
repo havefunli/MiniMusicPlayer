@@ -112,6 +112,10 @@ void Widget::initConnect()
     connect(player, &QMediaPlayer::durationChanged, this, &Widget::onDurationChanged);
     // 播放进度改变
     connect(player, &QMediaPlayer::positionChanged, this, &Widget::onPositionChanged);
+    // 进度条变化
+    connect(ui->progressBar, &MusicSlider::setMusicSliderPosition, this, &Widget::onMusicSliderPosChanged);
+    // 播放音乐切换
+    connect(player, &QMediaPlayer::currentMediaChanged, this, &Widget::onMediaChanged);
 }
 
 void Widget::initPlayer()
@@ -130,7 +134,7 @@ void Widget::playAllMusicOfCommonPage(CommonPage *page, int index)
     playList->clear();
     // 添加当前页音乐
     page->addMusicToPlaylist(musicList, playList);
-    // 从 0 开始播放, 设置播放模式
+    // 从 index 开始播放, 设置播放模式
     playList->setCurrentIndex(index);
     playList->setPlaybackMode(QMediaPlaylist::Loop);
 
@@ -139,6 +143,9 @@ void Widget::playAllMusicOfCommonPage(CommonPage *page, int index)
 
 void Widget::recordHistory(const QMediaContent &content)
 {
+    if (content.isNull()) {
+        return;
+    }
     // 媒体内容中包含多个资源，需要我们处理
     // 重定向前，重定向后
     QUrl url = content.request().url();
@@ -376,6 +383,51 @@ void Widget::onPositionChanged(qint64 duration)
     int sec = duration / 1000 % 60;
     // 更新界面
     ui->currentTime->setText(QString("%1:%2").arg(min, 2, 10, QChar('0'))
-                           .arg(sec, 2, 10, QChar('0')));
+                             .arg(sec, 2, 10, QChar('0')));
+    // 更新进度条的位置
+    ui->progressBar->setPos(duration / (float)player->duration());
 }
+
+void Widget::onMusicSliderPosChanged(float ratio)
+{
+    // 获取当前进度
+    qint64 pos = player->duration() * ratio;
+    // 设置播放位置
+    player->setPosition(pos);
+}
+
+void Widget::onMediaChanged(const QMediaContent &content)
+{
+    QString musicName = "未知音乐";
+    QString MusicSinger = "未知歌手";
+
+    // 获取音乐信息
+    if (!content.isNull()) {
+        QUrl url = content.request().url();
+        Music *music = musicList.findMUsicByQUrl(url);
+        if (music != nullptr) {
+            musicName = music->getMusicName();
+            MusicSinger = music->getMusicSinger();
+        }
+    }
+
+    // 设置文本
+    ui->musicName->setText(musicName);
+    ui->singerName->setText(MusicSinger);
+
+    // 获取封面图 / 异步加载
+    connect(player, &QMediaPlayer::metaDataAvailableChanged, this, [this](){
+        QVariant coverImage = player->metaData("ThumbnailImage");
+        if (coverImage.isValid()) {
+            QImage image = coverImage.value<QImage>();
+            ui->picture->setPixmap(QPixmap::fromImage(image));
+        } else {
+            qDebug() << "图片不存在";
+            QString path = ":/images/rec/001.png";
+            ui->picture->setPixmap(QPixmap(path));
+        }
+        ui->picture->setScaledContents(true);
+    });
+}
+
 

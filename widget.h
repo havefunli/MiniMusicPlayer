@@ -68,6 +68,10 @@ private slots:
     void onDurationChanged(qint64); // 播放音乐切换
     void onPositionChanged(qint64); // 播放进度变化
 
+    void onMusicSliderPosChanged(float); // 进度条变化
+
+    void onMediaChanged(const QMediaContent &); // 播放音乐切换
+
 private:
     Ui::MusicPlayer *ui;
     QPoint          dragPosition; // recored mouse pos

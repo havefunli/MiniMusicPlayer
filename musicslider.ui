@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>820</width>
+    <width>900</width>
     <height>20</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>820</width>
+    <width>910</width>
     <height>20</height>
    </size>
   </property>
@@ -30,7 +30,7 @@
     <rect>
      <x>0</x>
      <y>8</y>
-     <width>850</width>
+     <width>910</width>
      <height>4</height>
     </rect>
    </property>
@@ -42,7 +42,7 @@
    </property>
    <property name="maximumSize">
     <size>
-     <width>850</width>
+     <width>910</width>
      <height>4</height>
     </size>
    </property>
@@ -50,10 +50,7 @@
     <string notr="true">background-color:#ebeef5;</string>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
   </widget>
   <widget class="QFrame" name="outLine">
@@ -61,7 +58,7 @@
     <rect>
      <x>0</x>
      <y>8</y>
-     <width>400</width>
+     <width>0</width>
      <height>4</height>
     </rect>
    </property>
@@ -73,7 +70,7 @@
    </property>
    <property name="maximumSize">
     <size>
-     <width>850</width>
+     <width>910</width>
      <height>4</height>
     </size>
    </property>
@@ -81,10 +78,7 @@
     <string notr="true">background-color: #1ecc94;</string>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Shape::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Raised</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
   </widget>
  </widget>
