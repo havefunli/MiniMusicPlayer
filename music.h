@@ -25,6 +25,8 @@ public:
     bool getHistory() const;
     QUrl getMusicQUrl() const;
 
+    QString getLrcFilePath() const;
+
 private:
     void parseMediaMetaMusic();
 

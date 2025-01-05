@@ -94,6 +94,17 @@ QUrl Music::getMusicQUrl() const
     return musicUrl;
 }
 
+QString Music::getLrcFilePath() const
+{
+    QString filePath = musicUrl.toLocalFile();
+    int dotIndex = filePath.lastIndexOf('.');
+    if (dotIndex == -1) {
+        return "文件格式错误";
+    }
+    filePath.replace(dotIndex + 1, filePath.size() - dotIndex - 1, QString("lrc"));
+    return filePath;
+}
+
 void Music::parseMediaMetaMusic()
 {
     // 1. 创建媒体播放对象
@@ -113,7 +124,7 @@ void Music::parseMediaMetaMusic()
         musicSinger = player.metaData("Author").toString();
         musicAlbum = player.metaData("AlbumTitle").toString();
         duration = player.metaData("duration").toLongLong();
-        qDebug() << musicName << " " << musicSinger << " " << musicAlbum << " " << duration;
+        // qDebug() << musicName << " " << musicSinger << " " << musicAlbum << " " << duration;
     }
 
     // 5. 手动输入信息

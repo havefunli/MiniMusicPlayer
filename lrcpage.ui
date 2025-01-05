@@ -136,11 +136,19 @@ QLabel
             </property>
             <item>
              <widget class="QLabel" name="musicSinger">
+              <property name="font">
+               <font>
+                <family>Segoe UI</family>
+                <pointsize>16</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="styleSheet">
                <string notr="true"/>
               </property>
               <property name="text">
-               <string>歌手李权</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -149,11 +157,16 @@ QLabel
             </item>
             <item>
              <widget class="QLabel" name="musicName">
+              <property name="font">
+               <font>
+                <pointsize>16</pointsize>
+               </font>
+              </property>
               <property name="styleSheet">
                <string notr="true"/>
               </property>
               <property name="text">
-               <string>李权的测试歌曲名称</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -220,7 +233,7 @@ QLabel
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -247,7 +260,7 @@ QLabel
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -274,7 +287,7 @@ QLabel
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -307,7 +320,7 @@ QLabel
 }</string>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>快来播放音乐吧 A_A</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -334,7 +347,7 @@ QLabel
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -361,7 +374,7 @@ QLabel
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -388,7 +401,7 @@ QLabel
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string/>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>

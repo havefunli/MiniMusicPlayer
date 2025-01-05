@@ -406,6 +406,8 @@ void Widget::onPositionChanged(qint64 duration)
                              .arg(sec, 2, 10, QChar('0')));
     // 更新进度条的位置
     ui->progressBar->setPos(duration / (float)player->duration());
+    // 更新歌词
+    lrc->showLrcWordLine(duration);
 }
 
 void Widget::onMusicSliderPosChanged(float ratio)
@@ -418,35 +420,45 @@ void Widget::onMusicSliderPosChanged(float ratio)
 
 void Widget::onMediaChanged(const QMediaContent &content)
 {
+    Music *music = nullptr;
     QString musicName = "未知音乐";
-    QString MusicSinger = "未知歌手";
+    QString musicSinger = "未知歌手";
 
     // 获取音乐信息
     if (!content.isNull()) {
         QUrl url = content.request().url();
-        Music *music = musicList.findMUsicByQUrl(url);
+        music = musicList.findMUsicByQUrl(url);
         if (music != nullptr) {
             musicName = music->getMusicName();
-            MusicSinger = music->getMusicSinger();
+            musicSinger = music->getMusicSinger();
         }
     }
 
-    // 设置文本
+    // 设置播放栏文本
     ui->musicName->setText(musicName);
-    ui->singerName->setText(MusicSinger);
+    ui->singerName->setText(musicSinger);
+    // 设置 lrc 界面文本
+    lrc->setMusicName(musicName);
+    lrc->setMusicSinger(musicSinger);
 
     // 获取封面图 / 异步加载
-    connect(player, &QMediaPlayer::metaDataAvailableChanged, this, [this](){
+    connect(player, &QMediaPlayer::metaDataAvailableChanged, this, [=](){
         QVariant coverImage = player->metaData("ThumbnailImage");
         if (coverImage.isValid()) {
             QImage image = coverImage.value<QImage>();
             ui->picture->setPixmap(QPixmap::fromImage(image));
         } else {
-            qDebug() << "图片不存在";
+            qDebug() << content.request().url() << " 封面图片不存在";
             QString path = ":/images/rec/001.png";
             ui->picture->setPixmap(QPixmap(path));
         }
         ui->picture->setScaledContents(true);
     });
+
+    // 获取 lrc 歌词
+    if (music != nullptr) {
+        QString lrcPath = music->getLrcFilePath();
+        lrc->parseLrcFile(lrcPath);
+    }
 }
 
