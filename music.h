@@ -8,6 +8,7 @@ public:
     Music();
     Music(QUrl url);
 
+    void setMusicId(const QString&);
     void setMusicName(const QString&);
     void setMusicSinger(const QString&);
     void setMusicAlbum(const QString&);
@@ -26,6 +27,8 @@ public:
     QUrl getMusicQUrl() const;
 
     QString getLrcFilePath() const;
+
+    void insertMusicToDB() const;
 
 private:
     void parseMediaMetaMusic();

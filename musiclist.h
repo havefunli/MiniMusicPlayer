@@ -17,8 +17,10 @@ public:
     Music &operator[](int);
 
     Music *findMusicById(const QString&);
-
     Music *findMUsicByQUrl(const QUrl&);
+
+    void readFromDB();
+    void writeToDB();
 
 private:
     QVector<Music> musicVec;

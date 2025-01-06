@@ -3,6 +3,8 @@
 #include <QMediaMetaData>
 #include <QMediaPlayer>
 #include <QCoreApplication>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
 Music::Music()
     : isLike(false)
@@ -17,6 +19,11 @@ Music::Music(QUrl url)
     // 初始化一个 musicID
     musicID = QUuid::createUuid().toString();
     parseMediaMetaMusic();
+}
+
+void Music::setMusicId(const QString &ID)
+{
+    musicID = ID;
 }
 
 void Music::setMusicName(const QString &name)
@@ -105,6 +112,44 @@ QString Music::getLrcFilePath() const
     return filePath;
 }
 
+void Music::insertMusicToDB() const
+{
+    // 1. 检查当前音乐是否存在于数据库
+    QSqlQuery query;
+    query.prepare("SELECT EXISTS(SELECT 1 FROM Music WHERE musicId = :id)");
+    query.bindValue(":id", musicID);
+    if (!query.exec()) {
+        qDebug() << "查询音乐出错：" << query.lastError().text();
+        return;
+    }
+
+    if (query.next() && query.value(0).toBool()) {
+        // 2. 如果存在只需要更新 isLike isHistory
+        query.prepare("UPDATE Music SET isLike = :isLike, isHistory = :isHistory WHERE musicId = :musicId");
+        query.bindValue(":isLike", isLike ? 1 : 0);
+        query.bindValue(":isHistory", isHistory ? 1 : 0);
+        query.bindValue(":musicId", musicID);
+    } else {
+        // 3. 如果不存在插入该音乐信息
+        query.prepare("INSERT INTO Music \
+                       (musicId, musicName, musicSinger, albumName, musicUrl, duration, isLike, isHistory) \
+                       VALUES(:musicId, :musicName, :musicSinger, :albumName, :musicUrl, :duration, :isLike, :isHistory)");
+        query.bindValue(":musicId", musicID);
+        query.bindValue(":musicName", musicName);
+        query.bindValue(":musicSinger", musicSinger);
+        query.bindValue(":albumName", musicAlbum);
+        query.bindValue(":musicUrl", musicUrl);
+        query.bindValue(":duration", duration);
+        query.bindValue(":isLike", isLike ? 1 : 0);
+        query.bindValue(":isHistory", isHistory ? 1 : 0);
+    }
+    if (!query.exec()) {
+        qDebug() << "保存音乐出错：" << query.lastError().text();
+        return;
+    }
+    qDebug() << "成功保存音乐信息：" << musicName;
+}
+
 void Music::parseMediaMetaMusic()
 {
     // 1. 创建媒体播放对象
@@ -123,7 +168,7 @@ void Music::parseMediaMetaMusic()
         musicName = player.metaData("Title").toString();
         musicSinger = player.metaData("Author").toString();
         musicAlbum = player.metaData("AlbumTitle").toString();
-        duration = player.metaData("duration").toLongLong();
+        duration = player.metaData("Duration").toLongLong();
         // qDebug() << musicName << " " << musicSinger << " " << musicAlbum << " " << duration;
     }
 

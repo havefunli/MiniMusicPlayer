@@ -1,6 +1,8 @@
 #include "musiclist.h"
 #include <QMimeDatabase>
 #include <QDebug>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
 MusicList::MusicList()
 {
@@ -55,5 +57,35 @@ Music *MusicList::findMUsicByQUrl(const QUrl &url)
         }
     }
     return nullptr;
+}
+
+void MusicList::readFromDB()
+{
+    QSqlQuery query;
+    query.prepare("select musicId, musicName, musicSinger, albumName, musicUrl, duration, isLike, isHistory FROM Music");
+    if (!query.exec()) {
+        qDebug() << "数据读取出错：" << query.lastError().text();
+    }
+
+    while (query.next()) {
+        Music music;
+        music.setMusicId(query.value(0).toString());
+        music.setMusicName(query.value(1).toString());
+        music.setMusicSinger(query.value(2).toString());
+        music.setMusicAlbum(query.value(3).toString());
+        music.setMusicQUrl(query.value(4).toString());
+        music.setMusicDuration(query.value(5).toLongLong());
+        music.setLike(query.value(6).toBool());
+        music.setHistory(query.value(7).toBool());
+
+        musicVec.push_back(music);
+    }
+}
+
+void MusicList::writeToDB()
+{
+    for (int i = 0; i < musicVec.size(); i++) {
+        musicVec[i].insertMusicToDB();
+    }
 }
 

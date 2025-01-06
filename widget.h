@@ -16,6 +16,8 @@
 
 #include <QPropertyAnimation>
 
+#include <QtSql/QSqlDatabase>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MusicPlayer;
@@ -31,6 +33,9 @@ public:
     ~Widget();
 
     void initUi();
+    void initPageType();
+    void initSqlite();
+    void initMusicLiset();
     void initConnect();
     void initPlayer();
 
@@ -86,6 +91,7 @@ private:
     MusicList       musicList;    // 管理的音乐
     QMediaPlayer    *player;      // 播放器
     QMediaPlaylist  *playList;    // 播放列表
+    QSqlDatabase    sqlite;      // 保存音乐信息
 
     QPropertyAnimation *lrcAnimation; // 窗口上移动画
 };

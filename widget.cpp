@@ -5,6 +5,9 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QJsonObject>
+#include <QMessageBox>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -14,6 +17,9 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
     initUi();
+    initPageType();
+    initSqlite();
+    initMusicLiset();
     initPlayer();
     initConnect();
 }
@@ -49,13 +55,8 @@ void Widget::initUi()
     ui->supplyBox->initRecBoxUi(randomPiction(), 2);
 
     // 设置 CommonPage 的信息
-    ui->likePage->setMusicListType(PageType::LIKE_PAGE);
     ui->likePage->setCommonPageUI("我喜欢", ":/images/ilikebg.png");
-
-    ui->localPage->setMusicListType(PageType::LOCAL_PAGE);
     ui->localPage->setCommonPageUI("本地音乐", ":/images/localbg.png");
-
-    ui->recentPage->setMusicListType(PageType::HISTORY_PAGE);
     ui->recentPage->setCommonPageUI("最近播放", ":/images/recentbg.png");
 
     // 播放工具栏处理
@@ -78,6 +79,55 @@ void Widget::initUi()
     lrcAnimation->setDuration(250);
     lrcAnimation->setStartValue(QRect(10, 10 + lrc->height(), lrc->width(), lrc->height()));
     lrcAnimation->setEndValue(QRect(10, 10, lrc->width(), lrc->height()));
+}
+
+void Widget::initPageType()
+{
+    ui->likePage->setMusicListType(PageType::LIKE_PAGE);
+    ui->localPage->setMusicListType(PageType::LOCAL_PAGE);
+    ui->recentPage->setMusicListType(PageType::HISTORY_PAGE);
+}
+
+void Widget::initSqlite()
+{
+    // 1. 加载数据库驱动
+    sqlite = QSqlDatabase::addDatabase("QSQLITE");
+    // 2. 设置数据库名称
+    sqlite.setDatabaseName("QQMusic.db");
+    // 3. 打开
+    if (!sqlite.open()) {
+        QMessageBox::critical(this, "QQMusic", "数据库打开失败");
+        return;
+    }
+    qDebug() << "数据库打开成功";
+
+    // 4. 建表
+    QString sql = "CREATE TABLE IF NOT EXISTS Music(\
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,\
+                    musicId VARCHAR(50) UNIQUE, \
+                    musicName VARCHAR(50), \
+                    musicSinger VARCHAR(50), \
+                    albumName VARCHAR(50), \
+                    musicUrl VARCHAR(50), \
+                    duration BIGINT, \
+                    isLike INTEGER, \
+                    isHistory INTEGER)";
+    QSqlQuery query;
+    if (!query.exec(sql)) {
+        QMessageBox::critical(this, "QQMusic", "音乐数据初始化错误");
+        qDebug() << "音乐数据初始化错误:" << query.lastError().text();
+        return;
+    }
+    qDebug() << "创建表 / 读取表成功";
+}
+
+void Widget::initMusicLiset()
+{
+    musicList.readFromDB();
+    ui->likePage->reFresh(musicList);
+    ui->recentPage->reFresh(musicList);
+    ui->localPage->reFresh(musicList);
+    qDebug() << "成功加载音乐数据";
 }
 
 void Widget::initConnect()
@@ -196,8 +246,16 @@ void Widget::mousePressEvent(QMouseEvent *event)
 }
 
 // close window
+// 还需要保存音乐信息
+// 断开数据库连接
 void Widget::on_quit_clicked()
 {
+    musicList.writeToDB();
+    qDebug() << "成功保存所有音乐";
+
+    sqlite.close();
+    qDebug() << "成功断开数据库连接";
+
     this->close();
 }
 
