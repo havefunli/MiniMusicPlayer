@@ -21,6 +21,7 @@ SOURCES += \
     musicslider.cpp \
     recbox.cpp \
     recboxitem.cpp \
+    searchresult.cpp \
     volumetool.cpp \
     widget.cpp
 
@@ -34,6 +35,7 @@ HEADERS += \
     musicslider.h \
     recbox.h \
     recboxitem.h \
+    searchresult.h \
     volumetool.h \
     widget.h
 
@@ -45,6 +47,7 @@ FORMS += \
     musicslider.ui \
     recbox.ui \
     recboxitem.ui \
+    searchresult.ui \
     volumetool.ui \
     widget.ui
 

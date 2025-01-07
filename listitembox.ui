@@ -26,7 +26,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">outline:none;</string>
   </property>
   <widget class="QWidget" name="MusicName" native="true">
    <property name="geometry">
@@ -51,6 +51,9 @@
    </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">outline:none;</string>
    </property>
    <widget class="QLabel" name="nameLabel">
     <property name="geometry">

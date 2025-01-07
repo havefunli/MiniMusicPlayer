@@ -18,6 +18,8 @@
 
 #include <QtSql/QSqlDatabase>
 
+#include <QSystemTrayIcon>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MusicPlayer;
@@ -84,8 +86,9 @@ private slots:
     void onMediaChanged(const QMediaContent &); // 播放音乐切换
 
     void on_min_clicked();
-
     void on_max_clicked();
+    void onMusicQuit();
+
 
 private:
     Ui::MusicPlayer *ui;
@@ -100,5 +103,7 @@ private:
     bool isDrag;  // 修复点击 BtForm 屏幕乱窜的Bug
 
     QPropertyAnimation *lrcAnimation; // 窗口上移动画
+
+    QSystemTrayIcon *trayIcon;        // 系统托盘
 };
 #endif // WIDGET_H

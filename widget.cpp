@@ -1,5 +1,6 @@
 #include "widget.h"
 #include "ui_widget.h"
+#include <QMenu>
 #include <QDebug>
 #include <QList>
 #include <QDir>
@@ -9,12 +10,16 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
+#include <QCompleter>
+#include <QAbstractItemView>
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MusicPlayer)
     , player(new QMediaPlayer(this))
     , playList(new QMediaPlaylist(this))
     , isDrag(false)
+    , trayIcon(new QSystemTrayIcon(this))
 {
     ui->setupUi(this);
     initUi();
@@ -34,6 +39,17 @@ void Widget::initUi()
 {
     // 设置系统图标
     setWindowIcon(QIcon(":/images/tubiao.png"));
+
+    // 设置系统托盘
+    trayIcon->setIcon(QIcon(":/images/trayicon.png"));
+    trayIcon->setToolTip("MiniMusic");
+    trayIcon->show();
+    // 托盘系统菜单
+    QMenu *trayMenu = new QMenu();
+    trayMenu->addAction("显示", this, &QWidget::showNormal);
+    trayMenu->addAction("退出", this, &Widget::onMusicQuit);
+    trayIcon->setContextMenu(trayMenu);
+
     // remove frame
     this->setWindowFlag(Qt::FramelessWindowHint);
     // show shadow
@@ -82,6 +98,27 @@ void Widget::initUi()
     lrcAnimation->setDuration(250);
     lrcAnimation->setStartValue(QRect(10, 10 + lrc->height(), lrc->width(), lrc->height()));
     lrcAnimation->setEndValue(QRect(10, 10, lrc->width(), lrc->height()));
+
+    // 搜索提示
+    QStringList list;
+    // 创建 QCompleter 设置提示语
+    QCompleter *completer = new QCompleter(list, this);
+    completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    // 修改下拉框的样式
+    QAbstractItemView *view = completer->popup();
+    view->setStyleSheet(
+        "QListView {"
+        "    font-size: 15px;"
+        "    font-family: 'Microsoft YaHei';"
+        "    color: #333333;"
+        "    background-color: #ffffff;"
+        "    border: 1px solid #E3E3E3;"
+        "    border-radius: 5px;"
+        "}"
+    );
+    // 设置 completer 到 QLineEdit
+    ui->lineEdit->setCompleter(completer);
+
 }
 
 void Widget::initPageType()
@@ -104,7 +141,7 @@ void Widget::initSqlite()
     }
     qDebug() << "数据库打开成功";
 
-    // 4. 建表
+    // 4. 建音乐表
     QString sql = "CREATE TABLE IF NOT EXISTS Music(\
                     id INTEGER PRIMARY KEY AUTOINCREMENT,\
                     musicId VARCHAR(50) UNIQUE, \
@@ -121,6 +158,12 @@ void Widget::initSqlite()
         qDebug() << "音乐数据初始化错误:" << query.lastError().text();
         return;
     }
+//    // 5. 建搜索语句表
+//    QString sql = "CREATE TABLE IF NOT EXISTS Search(\
+//                    id INTEGER PRIMARY KEY AUTOINCREMENT,\
+//                    query VARCHAR(50) UNIQUE)";
+
+
     qDebug() << "创建表 / 读取表成功";
 }
 
@@ -183,6 +226,13 @@ void Widget::initConnect()
     connect(ui->progressBar, &MusicSlider::setMusicSliderPosition, this, &Widget::onMusicSliderPosChanged);
     // 播放音乐切换
     connect(player, &QMediaPlayer::currentMediaChanged, this, &Widget::onMediaChanged);
+
+    // 处理系统托盘点击事件
+    connect(trayIcon, &QSystemTrayIcon::activated, this, [=](QSystemTrayIcon::ActivationReason reason){
+        if (reason == QSystemTrayIcon::Trigger) {
+            this->show();
+        }
+    });
 }
 
 void Widget::initPlayer()
@@ -250,18 +300,10 @@ void Widget::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
 }
 
-// close window
-// 还需要保存音乐信息
-// 断开数据库连接
+// 最小化窗口
 void Widget::on_quit_clicked()
 {
-    musicList.writeToDB();
-    qDebug() << "成功保存所有音乐";
-
-    sqlite.close();
-    qDebug() << "成功断开数据库连接";
-
-    this->close();
+    this->hide();
 }
 
 void Widget::onBtFormClick(int pageId)
@@ -345,7 +387,7 @@ void Widget::on_addLocal_clicked()
         ui->stackedWidget->setCurrentIndex(4);
         // 刷新音乐显示
         ui->localPage->reFresh(musicList);
-        // 将本地音乐添加到播放列表
+        // 将本地音乐添加到播放列表z
         ui->localPage->addMusicToPlaylist(musicList, playList);
     }
 }
@@ -535,4 +577,17 @@ void Widget::on_min_clicked()
 void Widget::on_max_clicked()
 {
     QMessageBox::information(this, "QQMusic", "该功能程序猿正在修补BUG……");
+}
+
+// 退出程序
+// 还需要保存音乐信息
+// 断开数据库连接
+void Widget::onMusicQuit()
+{
+    musicList.writeToDB();
+    qDebug() << "成功保存所有音乐";
+
+    sqlite.close();
+    qDebug() << "成功断开数据库连接";
+    this->close();
 }
