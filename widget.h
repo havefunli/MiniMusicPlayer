@@ -83,6 +83,10 @@ private slots:
 
     void onMediaChanged(const QMediaContent &); // 播放音乐切换
 
+    void on_min_clicked();
+
+    void on_max_clicked();
+
 private:
     Ui::MusicPlayer *ui;
     QPoint          dragPosition; // recored mouse pos
@@ -92,6 +96,8 @@ private:
     QMediaPlayer    *player;      // 播放器
     QMediaPlaylist  *playList;    // 播放列表
     QSqlDatabase    sqlite;      // 保存音乐信息
+
+    bool isDrag;  // 修复点击 BtForm 屏幕乱窜的Bug
 
     QPropertyAnimation *lrcAnimation; // 窗口上移动画
 };

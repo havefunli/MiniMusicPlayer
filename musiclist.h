@@ -19,6 +19,8 @@ public:
     Music *findMusicById(const QString&);
     Music *findMUsicByQUrl(const QUrl&);
 
+    bool isExists(const QUrl&);
+
     void readFromDB();
     void writeToDB();
 

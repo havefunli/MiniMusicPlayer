@@ -21,7 +21,8 @@ void MusicList::addMusicByUrl(const QUrl &url)
     QMimeType mimeType = mimeDB.mimeTypeForFile(url.toLocalFile());
     QString mime = mimeType.name();
 
-    if (mime == "audio/mpeg" || mime == "audio/flac" || mime == "audio/wav") {
+    // 类型符合 && 不存在
+    if ((mime == "audio/mpeg" || mime == "audio/flac" || mime == "audio/wav") && !isExists(url)) {
         qDebug() << url << ": " << mime;
         musicVec.push_back(Music(url));
     }
@@ -57,6 +58,11 @@ Music *MusicList::findMUsicByQUrl(const QUrl &url)
         }
     }
     return nullptr;
+}
+
+bool MusicList::isExists(const QUrl &url)
+{
+    return findMUsicByQUrl(url) != nullptr ? true : false;
 }
 
 void MusicList::readFromDB()

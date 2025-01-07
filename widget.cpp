@@ -14,6 +14,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::MusicPlayer)
     , player(new QMediaPlayer(this))
     , playList(new QMediaPlaylist(this))
+    , isDrag(false)
 {
     ui->setupUi(this);
     initUi();
@@ -31,6 +32,8 @@ Widget::~Widget()
 
 void Widget::initUi()
 {
+    // 设置系统图标
+    setWindowIcon(QIcon(":/images/tubiao.png"));
     // remove frame
     this->setWindowFlag(Qt::FramelessWindowHint);
     // show shadow
@@ -108,7 +111,7 @@ void Widget::initSqlite()
                     musicName VARCHAR(50), \
                     musicSinger VARCHAR(50), \
                     albumName VARCHAR(50), \
-                    musicUrl VARCHAR(50), \
+                    musicUrl VARCHAR(50) UNIQUE, \
                     duration BIGINT, \
                     isLike INTEGER, \
                     isHistory INTEGER)";
@@ -223,9 +226,10 @@ void Widget::recordHistory(const QMediaContent &content)
 }
 
 // 移动窗口
+// 点击按钮时如果存在移动动作，会移动窗口 BUG
 void Widget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (event->buttons() == Qt::LeftButton)
+    if (isDrag && event->buttons() == Qt::LeftButton)
     {
         move(event->globalPos() - dragPosition);
     }
@@ -236,6 +240,7 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
 // 记录鼠标的位置
 void Widget::mousePressEvent(QMouseEvent *event)
 {
+    isDrag = true;
     if (event->button() == Qt::LeftButton)
     {
         // 鼠标的全局位置 - 窗口左上角的位置 = 鼠标在窗口的相对位置
@@ -261,6 +266,7 @@ void Widget::on_quit_clicked()
 
 void Widget::onBtFormClick(int pageId)
 {
+    isDrag = false;
     ui->stackedWidget->setCurrentIndex(pageId);
     // 清除其他按钮颜色
     QList<BtForm*> bts = this->findChildren<BtForm*>();
@@ -520,3 +526,13 @@ void Widget::onMediaChanged(const QMediaContent &content)
     }
 }
 
+
+void Widget::on_min_clicked()
+{
+    showMinimized();
+}
+
+void Widget::on_max_clicked()
+{
+    QMessageBox::information(this, "QQMusic", "该功能程序猿正在修补BUG……");
+}

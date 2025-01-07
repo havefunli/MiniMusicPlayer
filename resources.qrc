@@ -79,5 +79,6 @@
         <file>images/rec/038.png</file>
         <file>images/rec/039.png</file>
         <file>images/rec/040.png</file>
+        <file>images/monkey.png</file>
     </qresource>
 </RCC>

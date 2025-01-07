@@ -87,8 +87,6 @@ bool LrcPage::parseLrcFile(const QString &lrcFilePath)
             // qDebug() << lrcLine->lrcTime << " " << lrcLine->lrcText;
         }
     }
-
-
     return true;
 }
 
@@ -152,3 +150,4 @@ void LrcPage::setMusicName(const QString &name)
 {
     ui->musicName->setText(name);
 }
+
