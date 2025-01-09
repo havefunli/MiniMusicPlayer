@@ -15,8 +15,11 @@ public:
     explicit SearchResult(QWidget *parent = nullptr);
     ~SearchResult();
 
+    void setKeyWords(const QString&);
+
 private:
     Ui::SearchResult *ui;
+    QString keyWords;
 };
 
 #endif // SEARCHRESULT_H

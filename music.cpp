@@ -56,6 +56,11 @@ void Music::setHistory(bool history)
     isHistory = history;
 }
 
+void Music::setLocal(bool local)
+{
+    isLocal = local;
+}
+
 void Music::setMusicQUrl(const QUrl &url)
 {
     musicUrl = url;
@@ -94,6 +99,11 @@ bool Music::getLike() const
 bool Music::getHistory() const
 {
     return isHistory;
+}
+
+bool Music::getLocal() const
+{
+    return isLocal;
 }
 
 QUrl Music::getMusicQUrl() const
@@ -187,7 +197,7 @@ void Music::parseMediaMetaMusic()
     // 作者为空
     if(musicSinger.isEmpty()) {
         if (index != -1) {
-            musicSinger = fileName.mid(index + 2, fileName.indexOf('.') - index - 2).trimmed();
+            musicSinger = fileName.mid(index + 1, fileName.indexOf('.') - index - 1).trimmed();
         } else {
             musicSinger = "未知歌手";
         }

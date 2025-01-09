@@ -22,6 +22,7 @@ SOURCES += \
     recbox.cpp \
     recboxitem.cpp \
     searchresult.cpp \
+    upload.cpp \
     volumetool.cpp \
     widget.cpp
 
@@ -36,6 +37,7 @@ HEADERS += \
     recbox.h \
     recboxitem.h \
     searchresult.h \
+    upload.h \
     volumetool.h \
     widget.h
 
@@ -48,6 +50,7 @@ FORMS += \
     recbox.ui \
     recboxitem.ui \
     searchresult.ui \
+    upload.ui \
     volumetool.ui \
     widget.ui
 

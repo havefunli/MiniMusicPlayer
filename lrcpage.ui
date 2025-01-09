@@ -6,9 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1065</width>
+    <width>1066</width>
     <height>690</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -139,7 +144,7 @@ QLabel
               <property name="font">
                <font>
                 <family>Segoe UI</family>
-                <pointsize>16</pointsize>
+                <pointsize>12</pointsize>
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
@@ -159,7 +164,7 @@ QLabel
              <widget class="QLabel" name="musicName">
               <property name="font">
                <font>
-                <pointsize>16</pointsize>
+                <pointsize>12</pointsize>
                </font>
               </property>
               <property name="styleSheet">

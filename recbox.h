@@ -25,6 +25,9 @@ private slots:
 private:
     void createRecBoxItem();
 
+signals:
+    void getRandomMusic();
+
 private:
     Ui::RecBox *ui;
 

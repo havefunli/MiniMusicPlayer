@@ -59,3 +59,8 @@ void RecBoxItem::leaveEvent(QEvent *event)
     });
 }
 
+
+void RecBoxItem::on_recMusicBtn_clicked()
+{
+    emit clicked();
+}

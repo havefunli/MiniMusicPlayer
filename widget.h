@@ -54,6 +54,13 @@ private slots:
     // 切换界面
     // 将其他按键颜色清除
     void onBtFormClick(int);
+
+    // 搜索界面切换
+    void searchClicked();
+
+    // 向服务器申请一个随机音乐
+    void getRandomMusicFromSrv();
+
     // 推荐图片音频构造
     QJsonArray randomPiction();
 

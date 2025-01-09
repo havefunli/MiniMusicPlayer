@@ -23,6 +23,12 @@ protected:
     void enterEvent(QEvent *) override;
     void leaveEvent(QEvent *) override;
 
+private slots:
+    void on_recMusicBtn_clicked();
+
+signals:
+    void clicked();
+
 private:
     Ui::RecBoxItem *ui;
 };

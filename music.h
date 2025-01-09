@@ -15,6 +15,7 @@ public:
     void setMusicDuration(const qint64&);
     void setLike(bool);
     void setHistory(bool);
+    void setLocal(bool);
     void setMusicQUrl(const QUrl&);
 
     QString getMusicId() const;
@@ -24,6 +25,7 @@ public:
     qint64 getMusicDuration() const;
     bool getLike() const;
     bool getHistory() const;
+    bool getLocal() const;
     QUrl getMusicQUrl() const;
 
     QString getLrcFilePath() const;
@@ -48,6 +50,8 @@ private:
     bool isLike;
     // 是否历史播放
     bool isHistory;
+    // 是否本地音乐
+    bool isLocal;
     // 音乐 url
     QUrl musicUrl;
 };

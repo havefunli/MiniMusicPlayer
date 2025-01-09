@@ -90,7 +90,7 @@ void Widget::initUi()
 
     // 设置歌词窗口
     lrc = new LrcPage(this);
-    lrc->setGeometry(10, 10, lrc->width(), lrc->height());
+    lrc->setGeometry(9, 9, lrc->width(), lrc->height());
     lrc->hide();
 
     // 上移动画对象
@@ -119,6 +119,9 @@ void Widget::initUi()
     // 设置 completer 到 QLineEdit
     ui->lineEdit->setCompleter(completer);
 
+
+    // 调整 upload 图标
+    ui->upLoad->setIcon(QIcon(":/images/upload_1.png"));
 }
 
 void Widget::initPageType()
@@ -185,6 +188,7 @@ void Widget::initConnect()
     connect(ui->like, &BtForm::btClick, this, &Widget::onBtFormClick);
     connect(ui->local, &BtForm::btClick, this, &Widget::onBtFormClick);
     connect(ui->recent, &BtForm::btClick, this, &Widget::onBtFormClick);
+    connect(ui->lineEdit, &QLineEdit::returnPressed, this, &Widget::searchClicked);
 
     // 处理喜欢音乐的改变
     connect(ui->localPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
@@ -232,6 +236,14 @@ void Widget::initConnect()
         if (reason == QSystemTrayIcon::Trigger) {
             this->show();
         }
+    });
+
+    // 随机播放一个音乐
+    connect(ui->recMusicBox, &RecBox::getRandomMusic, this, [=](){
+        qDebug() << "1111";
+    });
+    connect(ui->supplyBox, &RecBox::getRandomMusic, this, [=](){
+        qDebug() << "1111";
     });
 }
 
@@ -320,6 +332,21 @@ void Widget::onBtFormClick(int pageId)
     qDebug() << "turn to pageId = " << pageId;
 }
 
+void Widget::searchClicked()
+{
+    // 切换到该页 / 传入关键词
+    ui->stackedWidget->setCurrentIndex(6);
+    ui->searchPage->setKeyWords(ui->lineEdit->text());
+    // 去除搜索框的词
+    ui->lineEdit->clear();
+}
+
+void Widget::getRandomMusicFromSrv()
+{
+
+}
+
+
 QJsonArray Widget::randomPiction()
 {
     // 获取文件名
@@ -376,7 +403,7 @@ void Widget::on_addLocal_clicked()
     fileDialog->setWindowTitle("添加本地音乐");
     // 设置默认目录
     fileDialog->setDirectory("C:\\Users\acer\\Desktop\\Project\\MiniMusicPlayer\\musics");
-    // 可选择多个路径
+    // 可选择多个文件
     fileDialog->setFileMode(QFileDialog::ExistingFiles);
     // 获取选取的文件
     if (fileDialog->exec() == QFileDialog::Accepted) {

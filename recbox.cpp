@@ -2,6 +2,7 @@
 #include "ui_recbox.h"
 #include "recboxitem.h"
 #include <QJsonObject>
+#include <QDebug>
 
 RecBox::RecBox(QWidget *parent)
     : QWidget(parent)
@@ -67,6 +68,10 @@ void RecBox::createRecBoxItem()
         } else {
             ui->recListUpHLayout->addWidget(item);
         }
+
+        connect(item, &RecBoxItem::clicked, this, [=](){
+            emit getRandomMusic();
+        });
 
         index++;
     }

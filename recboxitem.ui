@@ -112,9 +112,6 @@
      <property name="text">
       <string>推荐-001</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
     </widget>
    </item>
   </layout>
