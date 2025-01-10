@@ -3,6 +3,7 @@
 
 #include "musiclist.h"
 #include "commonpage.h"
+#include "upload.h"
 #include "lrcpage.h"
 #include <QMouseEvent>
 #include <QWidget>
@@ -96,6 +97,8 @@ private slots:
     void on_max_clicked();
     void onMusicQuit();
 
+
+    void on_upLoad_clicked();
 
 private:
     Ui::MusicPlayer *ui;

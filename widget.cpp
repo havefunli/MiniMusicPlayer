@@ -13,6 +13,8 @@
 #include <QCompleter>
 #include <QAbstractItemView>
 
+#include <QTcpSocket>
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MusicPlayer)
@@ -28,6 +30,13 @@ Widget::Widget(QWidget *parent)
     initMusicLiset();
     initPlayer();
     initConnect();
+
+
+//    QTcpSocket *client = new QTcpSocket(this);
+//    client->connectToHost("192.168.254.130", 8888);
+//    connect(client, &QTcpSocket::connected, this, [=](){
+//        qDebug() << "conntected!";
+//    });
 }
 
 Widget::~Widget()
@@ -617,4 +626,10 @@ void Widget::onMusicQuit()
     sqlite.close();
     qDebug() << "成功断开数据库连接";
     this->close();
+}
+
+void Widget::on_upLoad_clicked()
+{
+    UpLoad *tmp = new UpLoad(this);
+    tmp->show();
 }
