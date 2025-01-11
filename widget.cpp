@@ -9,11 +9,9 @@
 #include <QMessageBox>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
-
 #include <QCompleter>
 #include <QAbstractItemView>
-
-#include <QTcpSocket>
+#include <QHttpMultiPart>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -22,6 +20,7 @@ Widget::Widget(QWidget *parent)
     , playList(new QMediaPlaylist(this))
     , isDrag(false)
     , trayIcon(new QSystemTrayIcon(this))
+    , networkManager(new QNetworkAccessManager(this))
 {
     ui->setupUi(this);
     initUi();
@@ -30,13 +29,6 @@ Widget::Widget(QWidget *parent)
     initMusicLiset();
     initPlayer();
     initConnect();
-
-
-//    QTcpSocket *client = new QTcpSocket(this);
-//    client->connectToHost("192.168.254.130", 8888);
-//    connect(client, &QTcpSocket::connected, this, [=](){
-//        qDebug() << "conntected!";
-//    });
 }
 
 Widget::~Widget()
@@ -101,6 +93,11 @@ void Widget::initUi()
     lrc = new LrcPage(this);
     lrc->setGeometry(9, 9, lrc->width(), lrc->height());
     lrc->hide();
+
+    // 设置上传音乐窗口
+    loadPage = new UpLoad(this);
+    loadPage->setGeometry(292, 50, loadPage->width(), loadPage->height());
+    loadPage->hide();
 
     // 上移动画对象
     lrcAnimation = new QPropertyAnimation(lrc, "geometry", this);
@@ -254,6 +251,9 @@ void Widget::initConnect()
     connect(ui->supplyBox, &RecBox::getRandomMusic, this, [=](){
         qDebug() << "1111";
     });
+
+    // 上传音乐到服务端
+    connect(loadPage, &UpLoad::submitMusic, this, &Widget::onSubmitMusicToHost);
 }
 
 void Widget::initPlayer()
@@ -630,6 +630,86 @@ void Widget::onMusicQuit()
 
 void Widget::on_upLoad_clicked()
 {
-    UpLoad *tmp = new UpLoad(this);
-    tmp->show();
+    loadPage->show();
+}
+
+void Widget::onSubmitMusicToHost(const QUrl musicUrl, const QUrl lrcUrl)
+{
+    // 将数据解析
+    Music music(musicUrl);
+    // 设置目标 Url
+    QNetworkRequest request(QUrl("http://192.168.254.130:8888/uploadMusic"));
+    // 创建表单对象
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    // 添加文本字段
+    // Quid
+    QHttpPart uidPart;
+    uidPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"musicId\""));
+    uidPart.setBody(music.getMusicId().toUtf8());
+    multiPart->append(uidPart);
+    // 名字
+    QHttpPart namePart;
+    namePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"musicName\""));
+    namePart.setBody(music.getMusicName().toUtf8());
+    multiPart->append(namePart);
+    // 歌手
+    QHttpPart singerPart;
+    singerPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"musicSinger\""));
+    singerPart.setBody(music.getMusicSinger().toUtf8());
+    multiPart->append(singerPart);
+    // 专辑名
+    QHttpPart albumPart;
+    albumPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"musicAlbum\""));
+    albumPart.setBody(music.getMusicAlbum().toUtf8());
+    multiPart->append(albumPart);
+    // 时长
+    QHttpPart durationPart;
+    durationPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"musicDuration\""));
+    durationPart.setBody(QString::number(music.getMusicDuration()).toUtf8());
+    multiPart->append(durationPart);
+
+    // 添加歌曲和歌词
+    QFile *musicFile = new QFile(musicUrl.toLocalFile());
+    QFile *lrcFile = new QFile(lrcUrl.toLocalFile());
+    if (!musicFile->open(QIODevice::ReadOnly) || !lrcFile->open(QIODevice::ReadOnly)) {
+        QMessageBox::information(this, "警告", "你的音乐文件不存在");
+        delete multiPart; // 记得释放
+        return;
+    }
+
+    // 管理声明周期
+    musicFile->setParent(multiPart);
+    lrcFile->setParent(multiPart);
+
+    QString filePath = music.getMusicQUrl().toLocalFile();
+    QString musicFileName = filePath.mid(filePath.lastIndexOf('/') + 1);
+    QString lrcFileName = musicFileName.left(musicFileName.lastIndexOf('.')) + ".lrc";
+
+    // 歌曲
+    QHttpPart musicPart;
+    musicPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("audio/mp3"));
+    musicPart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                        QVariant("form-data; name=\"music\"; filename=\"" + musicFileName + "\""));
+    musicPart.setBodyDevice(musicFile);
+    multiPart->append(musicPart);
+    // 歌词
+    QHttpPart lrcPart;
+    lrcPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
+    lrcPart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                      QVariant("form-data; name=\"lrc\"; filename = \"" + lrcFileName + "\""));
+    lrcPart.setBodyDevice(lrcFile);
+    multiPart->append(lrcPart);
+
+    QNetworkReply *reply = networkManager->post(request, multiPart);
+    multiPart->setParent(reply);
+
+    // 处理回复
+    connect(reply, &QNetworkReply::finished, this, [reply]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            QMessageBox::information(nullptr, "信息", "音乐上传成功！");
+        } else {
+            QMessageBox::warning(nullptr, "信息", "网络错误：" + reply->errorString());
+        }
+        reply->deleteLater();
+    });
 }

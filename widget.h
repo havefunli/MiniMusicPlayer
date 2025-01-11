@@ -11,15 +11,13 @@
 #include <volumetool.h>
 #include <QJsonArray>
 #include <QGraphicsDropShadowEffect>
-
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
-
 #include <QPropertyAnimation>
-
 #include <QtSql/QSqlDatabase>
-
 #include <QSystemTrayIcon>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -35,6 +33,7 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+    void connectToHost();
     void initUi();
     void initPageType();
     void initSqlite();
@@ -97,8 +96,9 @@ private slots:
     void on_max_clicked();
     void onMusicQuit();
 
-
     void on_upLoad_clicked();
+
+    void onSubmitMusicToHost(const QUrl, const QUrl); // 上传音乐到服务端
 
 private:
     Ui::MusicPlayer *ui;
@@ -109,11 +109,10 @@ private:
     QMediaPlayer    *player;      // 播放器
     QMediaPlaylist  *playList;    // 播放列表
     QSqlDatabase    sqlite;      // 保存音乐信息
-
     bool isDrag;  // 修复点击 BtForm 屏幕乱窜的Bug
-
     QPropertyAnimation *lrcAnimation; // 窗口上移动画
-
     QSystemTrayIcon *trayIcon;        // 系统托盘
+    UpLoad *loadPage; // 上传界面
+    QNetworkAccessManager *networkManager;
 };
 #endif // WIDGET_H

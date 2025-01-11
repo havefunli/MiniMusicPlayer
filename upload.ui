@@ -14,7 +14,19 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #F0F0F0;</string>
+   <string notr="true">QWidget {
+    background-color: white;
+}
+
+QPushButton {
+    background-color: #E3E3E3;
+}
+
+QPushButton:hover {
+    background-color: #31B48A;
+}
+
+</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -73,20 +85,42 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+     <widget class="QPushButton" name="cancleBtn">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>20</y>
+        <width>30</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </widget>
     </widget>
    </item>
    <item>
     <widget class="QWidget" name="body" native="true">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="music">
+        <property name="styleSheet">
+         <string notr="true">border: none;</string>
+        </property>
         <property name="text">
          <string>音乐文件</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="lrc">
+        <property name="styleSheet">
+         <string notr="true">border: none;</string>
+        </property>
         <property name="text">
          <string>歌词文件</string>
         </property>
@@ -109,7 +143,7 @@
        <height>80</height>
       </size>
      </property>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="subBtn">
       <property name="geometry">
        <rect>
         <x>200</x>
@@ -119,7 +153,8 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">border-radius:6px;</string>
+       <string notr="true">
+border-radius:6px;</string>
       </property>
       <property name="text">
        <string>上传</string>
