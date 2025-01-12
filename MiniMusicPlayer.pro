@@ -23,6 +23,7 @@ SOURCES += \
     recbox.cpp \
     recboxitem.cpp \
     searchresult.cpp \
+    serverconnection.cpp \
     upload.cpp \
     volumetool.cpp \
     widget.cpp
@@ -38,6 +39,7 @@ HEADERS += \
     recbox.h \
     recboxitem.h \
     searchresult.h \
+    serverconnection.h \
     upload.h \
     volumetool.h \
     widget.h

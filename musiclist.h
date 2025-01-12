@@ -11,6 +11,7 @@ public:
     MusicList();
 
     size_t size() const;
+    void addMusic(const Music &);
     void addMusicByUrl(const QUrl&);
     void addMusicByUrls(const QList<QUrl>&);
 

@@ -30,7 +30,7 @@ public:
     ~LrcPage();
 
     bool parseOneLine(const QString &, LrcWordLine *);
-    bool parseLrcFile(const QString &);
+    bool parseLrcFile(const QString &, bool);
 
     void showLrcWordLine(qint64);  // 根据当前时间更新歌词界面
     int getLrcWordLineIndex(qint64);

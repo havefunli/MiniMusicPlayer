@@ -5,13 +5,16 @@
 #include <QtSql/QSqlError>
 
 MusicList::MusicList()
-{
-
-}
+{}
 
 size_t MusicList::size() const
 {
     return musicVec.size();
+}
+
+void MusicList::addMusic(const Music &music)
+{
+    musicVec.append(music);
 }
 
 void MusicList::addMusicByUrl(const QUrl &url)

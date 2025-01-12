@@ -65,17 +65,24 @@ bool LrcPage::parseOneLine(const QString &line, LrcWordLine *lrcLine)
     return true;
 }
 
-bool LrcPage::parseLrcFile(const QString &lrcFilePath)
+bool LrcPage::parseLrcFile(const QString &lrcFilePath, bool isLocal)
 {
     // 清除上一个音乐的信息
     lrcWordLines.clear();
 
-    // 1. 打开文件
-    QFile file(lrcFilePath);
-    file.open(QIODevice::ReadOnly);
-    if (!file.isOpen()) {
-        qDebug() << "打开文件失败";
-        return false;
+    // lrc 文件不一定在本地
+    QFile file;
+    if (isLocal) {
+        // 打开文件
+        file.setFileName(lrcFilePath);
+        file.open(QIODevice::ReadOnly);
+        if (!file.isOpen()) {
+            qDebug() << "打开文件失败";
+            return false;
+        }
+    } else {
+        // 远程获取文件
+
     }
 
     while (!file.atEnd()) {

@@ -113,7 +113,7 @@ QUrl Music::getMusicQUrl() const
 
 QString Music::getLrcFilePath() const
 {
-    QString filePath = musicUrl.toLocalFile();
+    QString filePath = musicUrl.toString();
     int dotIndex = filePath.lastIndexOf('.');
     if (dotIndex == -1) {
         return "文件格式错误";

@@ -5,6 +5,7 @@
 #include "commonpage.h"
 #include "upload.h"
 #include "lrcpage.h"
+#include "serverconnection.h"
 #include <QMouseEvent>
 #include <QWidget>
 #include <QDebug>
@@ -16,8 +17,7 @@
 #include <QPropertyAnimation>
 #include <QtSql/QSqlDatabase>
 #include <QSystemTrayIcon>
-#include <QNetworkReply>
-#include <QNetworkAccessManager>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -113,6 +113,6 @@ private:
     QPropertyAnimation *lrcAnimation; // 窗口上移动画
     QSystemTrayIcon *trayIcon;        // 系统托盘
     UpLoad *loadPage; // 上传界面
-    QNetworkAccessManager *networkManager;
+    ServerConnection *srv; // 服务器连接
 };
 #endif // WIDGET_H
