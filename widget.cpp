@@ -644,7 +644,7 @@ void Widget::onSubmitMusicToHost(const QUrl musicUrl, const QUrl lrcUrl)
     // 添加文本字段
     // Quid
     QHttpPart uidPart;
-    uidPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"musicId\""));
+    uidPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"\""));
     uidPart.setBody(music.getMusicId().toUtf8());
     multiPart->append(uidPart);
     // 名字
@@ -677,7 +677,7 @@ void Widget::onSubmitMusicToHost(const QUrl musicUrl, const QUrl lrcUrl)
         return;
     }
 
-    // 管理声明周期
+    // 管理文件生命周期
     musicFile->setParent(multiPart);
     lrcFile->setParent(multiPart);
 
@@ -705,11 +705,11 @@ void Widget::onSubmitMusicToHost(const QUrl musicUrl, const QUrl lrcUrl)
 
     // 处理回复
     connect(reply, &QNetworkReply::finished, this, [reply]() {
-        if (reply->error() == QNetworkReply::NoError) {
-            QMessageBox::information(nullptr, "信息", "音乐上传成功！");
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 200) {
+            QMessageBox::information(nullptr, "信息", reply->readAll());
         } else {
-            QMessageBox::warning(nullptr, "信息", "网络错误：" + reply->errorString());
+            QMessageBox::information(nullptr, "警告", reply->readAll());
         }
-        reply->deleteLater();
     });
 }
