@@ -1,5 +1,4 @@
 #include "widget.h"
-
 #include <QApplication>
 #include <QMessageBox>
 #include <QSharedMemory>

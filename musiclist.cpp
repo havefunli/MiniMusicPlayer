@@ -14,7 +14,9 @@ size_t MusicList::size() const
 
 void MusicList::addMusic(const Music &music)
 {
-    musicVec.append(music);
+    if (!isExists(music.getMusicQUrl())) {
+        musicVec.append(music);
+    }
 }
 
 void MusicList::addMusicByUrl(const QUrl &url)

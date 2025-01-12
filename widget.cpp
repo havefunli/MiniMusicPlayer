@@ -342,42 +342,16 @@ void Widget::searchClicked()
 
 void Widget::getRandomMusicFromSrv()
 {
-    // 设置目标 Url
-    QNetworkRequest request(QUrl("http://192.168.254.130:8888/getRandomMusic"));
-    // 发起请求
-    QNetworkReply *reply = networkManager->get(request);
-    connect(reply, &QNetworkReply::finished, this, [reply, this](){
-        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-        if (statusCode == 200) {
-            // 获取音乐信息
-            QJsonDocument jsonDoc = QJsonDocument::fromJson(reply->readAll());
-            // 查重
-            Music music;
-            Music *musicPtr = musicList.findMusicById(jsonDoc["uid"].toString());
-            if (musicPtr == nullptr) {
-                // 构造一个音乐对象
-                music.setLocal(false);
-                music.setMusicId(jsonDoc["uid"].toString());
-                music.setMusicName(jsonDoc["musicName"].toString());
-                music.setMusicSinger(jsonDoc["musicSinger"].toString());
-                music.setMusicAlbum(jsonDoc["musicAlbum"].toString());
-                music.setMusicDuration(jsonDoc["duration"].toString().toLongLong());
-                music.setMusicQUrl(musicFileUrlPrefix + jsonDoc["musicFileName"].toString());
-                // 添加管理
-                musicList.addMusic(music);
-            } else {
-                music = *musicPtr;
-            }
-
-            this->playList->clear();
-            playList->addMedia(music.getMusicQUrl());
-            player->play();
-        } else {
-            QMessageBox::warning(nullptr, "警告", "音乐获取失败");
-        }
+    srv->getRandomMusic();
+    // 音乐就绪
+    connect(srv, &ServerConnection::randomMusicReady, this, [=](const Music music){
+        // 加入到音乐管理数组(自动查重)
+        musicList.addMusic(music);
+        this->playList->clear();
+        playList->addMedia(music.getMusicQUrl());
+        player->play();
     });
 }
-
 
 QJsonArray Widget::randomPiction()
 {

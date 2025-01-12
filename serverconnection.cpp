@@ -3,6 +3,10 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 
+const QUrl ServerConnection::RandomMusicUrl("http://192.168.254.130:8888/getRandomMusic");
+const QUrl ServerConnection::UpLoadMusicUrl("http://192.168.254.130:8888/uploadMusic");
+const QString ServerConnection::musicFileUrlPrefix = "http://192.168.254.130:8888/Music/";
+
 ServerConnection::ServerConnection(QObject *parent)
     : QObject(parent)
     , networkManager(new QNetworkAccessManager(this))
@@ -91,7 +95,7 @@ void ServerConnection::SendMusicToHost(const QUrl &musicUrl, const QUrl &lrcUrl)
     });
 }
 
-Music *ServerConnection::getRandomMisc()
+void ServerConnection::getRandomMusic()
 {
     // 设置目标 Url
     QNetworkRequest request(RandomMusicUrl);
@@ -111,13 +115,13 @@ Music *ServerConnection::getRandomMisc()
             music.setMusicAlbum(jsonDoc["musicAlbum"].toString());
             music.setMusicDuration(jsonDoc["duration"].toString().toLongLong());
             music.setMusicQUrl(musicFileUrlPrefix + jsonDoc["musicFileName"].toString());
+
+            qDebug() << "随机获取的音乐是 " << music.getMusicName();
+
+            emit randomMusicReady(music);
         } else {
             QMessageBox::warning(nullptr, "警告", "音乐获取失败");
         }
     });
 }
 
-QUrl ServerConnection::getRandomMusicUrl() const
-{
-    return RandomMusicUrl;
-}
