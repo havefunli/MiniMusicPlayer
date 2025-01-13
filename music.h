@@ -4,6 +4,9 @@
 
 class Music
 {
+private:
+    bool isLocalPath(const QString &);
+
 public:
     Music();
     Music(QUrl url);

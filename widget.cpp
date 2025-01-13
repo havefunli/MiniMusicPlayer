@@ -26,7 +26,7 @@ Widget::Widget(QWidget *parent)
     initUi();
     initPageType();
     initSqlite();
-    initMusicLiset();
+    initMusicList();
     initPlayer();
     initConnect();
 }
@@ -152,15 +152,15 @@ void Widget::initSqlite()
 
     // 4. 建音乐表
     QString sql = "CREATE TABLE IF NOT EXISTS Music(\
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,\
-                    musicId VARCHAR(50) UNIQUE, \
+                    musicId PRIMARYKEY VARCHAR(50) UNIQUE, \
                     musicName VARCHAR(50), \
                     musicSinger VARCHAR(50), \
                     albumName VARCHAR(50), \
                     musicUrl VARCHAR(50) UNIQUE, \
                     duration BIGINT, \
                     isLike INTEGER, \
-                    isHistory INTEGER)";
+                    isHistory INTEGER, \
+                    isLocal INTEGER)";
     QSqlQuery query;
     if (!query.exec(sql)) {
         QMessageBox::critical(this, "QQMusic", "音乐数据初始化错误");
@@ -170,7 +170,7 @@ void Widget::initSqlite()
     qDebug() << "创建表 / 读取表成功";
 }
 
-void Widget::initMusicLiset()
+void Widget::initMusicList()
 {
     musicList.readFromDB();
     ui->likePage->reFresh(musicList);
@@ -241,9 +241,10 @@ void Widget::initConnect()
     // 随机播放一个音乐
     connect(ui->recMusicBox, &RecBox::getRandomMusic, this, &Widget::getRandomMusicFromSrv);
     connect(ui->supplyBox, &RecBox::getRandomMusic, this, &Widget::getRandomMusicFromSrv);
-
     // 上传音乐到服务端
     connect(loadPage, &UpLoad::submitMusic, this, &Widget::onSubmitMusicToHost);
+    // 获取歌词文件
+    connect(lrc, &LrcPage::sendLrcRequest, this, &Widget::recvAndParseLrc);
 }
 
 void Widget::initPlayer()
@@ -597,8 +598,7 @@ void Widget::onMediaChanged(const QMediaContent &content)
     // 获取 lrc 歌词
     if (music != nullptr) {
         QString lrcPath = music->getLrcFilePath();
-        // qDebug() << "music.getLocal() = " << music->getLocal();
-        lrc->parseLrcFile(lrcPath, music->getLocal());
+        lrc->getLrcAndParse(lrcPath, music->getLocal());
     }
 }
 
@@ -619,10 +619,10 @@ void Widget::on_max_clicked()
 void Widget::onMusicQuit()
 {
     musicList.writeToDB();
-    qDebug() << "成功保存所有音乐";
 
     sqlite.close();
     qDebug() << "成功断开数据库连接";
+
     this->close();
 }
 
@@ -634,4 +634,12 @@ void Widget::on_upLoad_clicked()
 void Widget::onSubmitMusicToHost(const QUrl musicUrl, const QUrl lrcUrl)
 {
     srv->SendMusicToHost(musicUrl, lrcUrl);
+}
+
+void Widget::recvAndParseLrc(const QUrl &url, const ParseFunc task)
+{
+    srv->rcvLrcFromHost(url);
+    connect(srv, &ServerConnection::lrcReady, this, [=](QString content){
+        task(content);
+    });
 }

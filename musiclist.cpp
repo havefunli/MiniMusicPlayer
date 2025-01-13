@@ -73,7 +73,7 @@ bool MusicList::isExists(const QUrl &url)
 void MusicList::readFromDB()
 {
     QSqlQuery query;
-    query.prepare("select musicId, musicName, musicSinger, albumName, musicUrl, duration, isLike, isHistory FROM Music");
+    query.prepare("select musicId, musicName, musicSinger, albumName, musicUrl, duration, isLike, isHistory, isLocal FROM Music");
     if (!query.exec()) {
         qDebug() << "数据读取出错：" << query.lastError().text();
     }
@@ -88,6 +88,7 @@ void MusicList::readFromDB()
         music.setMusicDuration(query.value(5).toLongLong());
         music.setLike(query.value(6).toBool());
         music.setHistory(query.value(7).toBool());
+        music.setLocal(query.value(8).toBool());
 
         musicVec.push_back(music);
     }

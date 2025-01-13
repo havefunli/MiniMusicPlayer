@@ -49,7 +49,9 @@ void CommonPage::addMusicToMusicPage(MusicList &musicList)
                 }
                 break;
             case LOCAL_PAGE:
-                musicOfPage.push_back(music.getMusicId());
+                if (music.getLocal()) {
+                    musicOfPage.push_back(music.getMusicId());
+                }
                 break;
             case HISTORY_PAGE:
                 if (music.getHistory()) {
@@ -108,7 +110,9 @@ void CommonPage::addMusicToPlaylist(MusicList &musicList, QMediaPlaylist *playLi
                 }
                 break;
             case LOCAL_PAGE:
-                playList->addMedia(music.getMusicQUrl());
+                if (music.getLocal()) {
+                    playList->addMedia(music.getMusicQUrl());
+                }
                 break;
             case HISTORY_PAGE:
                 if (music.getHistory()) {

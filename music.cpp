@@ -6,9 +6,15 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
+bool Music::isLocalPath(const QString &filePath)
+{
+    return filePath.contains("http://192.168.254.130:8888");
+}
+
 Music::Music()
     : isLike(false)
     , isHistory(false)
+    , isLocal(true)
 {}
 
 Music::Music(QUrl url)
@@ -113,7 +119,12 @@ QUrl Music::getMusicQUrl() const
 
 QString Music::getLrcFilePath() const
 {
+    // 根据具体类型选择具体的转换方式
     QString filePath = musicUrl.toString();
+    if (isLocal) {
+        filePath = musicUrl.toLocalFile();
+    }
+    // 转换文件后缀
     int dotIndex = filePath.lastIndexOf('.');
     if (dotIndex == -1) {
         return "文件格式错误";
@@ -142,9 +153,9 @@ void Music::insertMusicToDB() const
     } else {
         // 3. 如果不存在插入该音乐信息
         query.prepare("INSERT INTO Music \
-                       (musicId, musicName, musicSinger, albumName, musicUrl, duration, isLike, isHistory) \
-                       VALUES(:musicId, :musicName, :musicSinger, :albumName, :musicUrl, :duration, :isLike, :isHistory)");
-        query.bindValue(":musicId", musicID);
+                       (musicId, musicName, musicSinger, albumName, musicUrl, duration, isLike, isHistory, isLocal) \
+                       VALUES(:musicId, :musicName, :musicSinger, :albumName, :musicUrl, :duration, :isLike, :isHistory, :isLocal)");
+                      query.bindValue(":musicId", musicID);
         query.bindValue(":musicName", musicName);
         query.bindValue(":musicSinger", musicSinger);
         query.bindValue(":albumName", musicAlbum);
@@ -152,6 +163,7 @@ void Music::insertMusicToDB() const
         query.bindValue(":duration", duration);
         query.bindValue(":isLike", isLike ? 1 : 0);
         query.bindValue(":isHistory", isHistory ? 1 : 0);
+        query.bindValue(":isLocal", isLocal ? 1 : 0);
     }
     if (!query.exec()) {
         qDebug() << "保存音乐出错：" << query.lastError().text();
@@ -207,5 +219,7 @@ void Music::parseMediaMetaMusic()
     if (musicAlbum.isEmpty()) {
         musicAlbum = "未知专辑";
     }
+
+    isLocal = musicUrl.isLocalFile();
 }
 

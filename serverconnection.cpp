@@ -92,6 +92,23 @@ void ServerConnection::SendMusicToHost(const QUrl &musicUrl, const QUrl &lrcUrl)
             msg = msg.isEmpty() ? reply->errorString() : msg;
             QMessageBox::information(nullptr, "警告", msg);
         }
+        reply->deleteLater();
+    });
+}
+
+void ServerConnection::rcvLrcFromHost(const QUrl &url)
+{
+    QNetworkRequest requet(url);
+    QNetworkReply *reply = networkManager->get(requet);
+    connect(reply, &QNetworkReply::finished, this, [=](){
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 200) {
+            qDebug() << "成功获取歌词文件";
+            emit lrcReady(reply->readAll());
+        } else {
+            QMessageBox::warning(nullptr, "警告", "歌词获取失败");
+        }
+        reply->deleteLater();
     });
 }
 
@@ -122,6 +139,7 @@ void ServerConnection::getRandomMusic()
         } else {
             QMessageBox::warning(nullptr, "警告", "音乐获取失败");
         }
+        reply->deleteLater();
     });
 }
 

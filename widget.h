@@ -37,7 +37,7 @@ public:
     void initUi();
     void initPageType();
     void initSqlite();
-    void initMusicLiset();
+    void initMusicList();
     void initConnect();
     void initPlayer();
 
@@ -99,6 +99,8 @@ private slots:
     void on_upLoad_clicked();
 
     void onSubmitMusicToHost(const QUrl, const QUrl); // 上传音乐到服务端
+
+    void recvAndParseLrc(const QUrl &, const ParseFunc);
 
 private:
     Ui::MusicPlayer *ui;

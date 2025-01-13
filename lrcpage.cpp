@@ -1,7 +1,9 @@
 #include "lrcpage.h"
 #include "ui_lrcpage.h"
+#include "serverconnection.h"
 #include <QFile>
 #include <QDebug>
+#include <QTextStream>
 
 LrcPage::LrcPage(QWidget *parent) :
     QWidget(parent),
@@ -32,6 +34,31 @@ LrcPage::LrcPage(QWidget *parent) :
 LrcPage::~LrcPage()
 {
     delete ui;
+}
+
+void LrcPage::getLrcAndParse(const QString &filePath, bool isLocal)
+{
+    qDebug() << "lrcFilePath: " << filePath;
+
+    // lrc 文件不一定在本地
+    // 本地文件
+    if (isLocal) {
+        // 打开文件
+        QFile file;
+        file.setFileName(filePath);
+        file.open(QIODevice::ReadOnly);
+        if (!file.isOpen()) {
+            qDebug() << "打开本地歌词文件失败";
+            return;
+        }
+        parseLrcFile(file.readAll());
+        file.close();
+        return;
+    } else {
+        // 远程获取文件
+        qDebug() << "远程获取歌词文件";
+        emit sendLrcRequest(QUrl(filePath), std::bind(&LrcPage::parseLrcFile, this, std::placeholders::_1));
+    }
 }
 
 
@@ -65,28 +92,15 @@ bool LrcPage::parseOneLine(const QString &line, LrcWordLine *lrcLine)
     return true;
 }
 
-bool LrcPage::parseLrcFile(const QString &lrcFilePath, bool isLocal)
+bool LrcPage::parseLrcFile(QString fileContent)
 {
+    QTextStream stream(&fileContent);
+
     // 清除上一个音乐的信息
     lrcWordLines.clear();
 
-    // lrc 文件不一定在本地
-    QFile file;
-    if (isLocal) {
-        // 打开文件
-        file.setFileName(lrcFilePath);
-        file.open(QIODevice::ReadOnly);
-        if (!file.isOpen()) {
-            qDebug() << "打开文件失败";
-            return false;
-        }
-    } else {
-        // 远程获取文件
-
-    }
-
-    while (!file.atEnd()) {
-        QString line = file.readLine();
+    while (!stream.atEnd()) {
+        QString line = stream.readLine();
         // 解析单行数据：
         LrcWordLine *lrcLine = new LrcWordLine();
         if (parseOneLine(line, lrcLine)) {

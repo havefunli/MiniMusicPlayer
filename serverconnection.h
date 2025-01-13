@@ -15,12 +15,16 @@ public:
 
     // 发送一个音乐文件
     void SendMusicToHost(const QUrl &, const QUrl &);
+    // 接受 lrc 文件
+    void rcvLrcFromHost(const QUrl &);
     // 接受一个随机线上音乐
     void getRandomMusic();
 
 signals:
     // 随机音乐就绪了
     void randomMusicReady(const Music);
+    // 歌词就绪
+    void lrcReady(QString);
 
 
 public:
