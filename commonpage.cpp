@@ -80,10 +80,7 @@ void CommonPage::reFresh(MusicList &musicList)
          // 将 ListBoxItem 对象放置到其中
          ListItemBox *itemBox = new ListItemBox(this);
          // 设置字段
-         itemBox->setMusicName(music->getMusicName());
-         itemBox->setMusicSinger(music->getMusicSinger());
-         itemBox->setMusicAlbum(music->getMusicAlbum());
-         itemBox->setLikeMusic(music->getLike());
+         itemBox->setMusic(music);
 
          QListWidgetItem *item = new QListWidgetItem(ui->pageMusicList);
          item->setSizeHint(QSize(itemBox->width(), itemBox->height()));

@@ -1,6 +1,9 @@
 #ifndef MUSIC_H
 #define MUSIC_H
+
 #include <QUrl>
+#include <QJsonObject>
+
 
 class Music
 {
@@ -10,6 +13,7 @@ private:
 public:
     Music();
     Music(QUrl url);
+    Music(const QJsonObject&);
 
     void setMusicId(const QString&);
     void setMusicName(const QString&);

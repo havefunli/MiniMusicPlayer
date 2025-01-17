@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
+#include "serverconnection.h"
 
 bool Music::isLocalPath(const QString &filePath)
 {
@@ -25,6 +26,16 @@ Music::Music(QUrl url)
     // 初始化一个 musicID
     musicID = QUuid::createUuid().toString();
     parseMediaMetaMusic();
+}
+
+Music::Music(const QJsonObject &jsonObj)
+{
+    setMusicId(jsonObj["uid"].toString());
+    setMusicName(jsonObj["musicName"].toString());
+    setMusicSinger(jsonObj["musicSinger"].toString());
+    setMusicAlbum(jsonObj["musicAlbum"].toString());
+    setMusicDuration(jsonObj["duration"].toString().toLongLong());
+    setMusicQUrl(ServerConnection::musicFileUrlPrefix + jsonObj["musicFileName"].toString());
 }
 
 void Music::setMusicId(const QString &ID)

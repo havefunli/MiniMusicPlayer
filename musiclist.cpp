@@ -65,6 +65,11 @@ Music *MusicList::findMUsicByQUrl(const QUrl &url)
     return nullptr;
 }
 
+Music *MusicList::back()
+{
+    return &musicVec.back();
+}
+
 bool MusicList::isExists(const QUrl &url)
 {
     return findMUsicByQUrl(url) != nullptr ? true : false;

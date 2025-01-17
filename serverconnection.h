@@ -19,19 +19,23 @@ public:
     void rcvLrcFromHost(const QUrl &);
     // 接受一个随机线上音乐
     void getRandomMusic();
+    // 搜索音乐
+    void searchMusic(const QString &);
 
 signals:
     // 随机音乐就绪了
     void randomMusicReady(const Music);
     // 歌词就绪
     void lrcReady(QString);
+    // 搜索结果就绪了
+    void searchResultReady(QVector<Music>);
 
 
 public:
     static const QUrl RandomMusicUrl;
     static const QUrl UpLoadMusicUrl;
     static const QString musicFileUrlPrefix;
-
+    static const QString musicSearchPrefix;
 private:
     QNetworkAccessManager *networkManager;
 };

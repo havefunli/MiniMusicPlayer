@@ -216,6 +216,7 @@ void Widget::initConnect()
     connect(ui->likePage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
     connect(ui->localPage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
     connect(ui->recentPage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
+    connect(ui->searchPage, &SearchResult::playMusicByIndex, this, &Widget::playOnlineMusicByIndex);
     // 记录历史播放
     connect(player, &QMediaPlayer::currentMediaChanged, this, &Widget::recordHistory);
     // 处理静音
@@ -245,6 +246,8 @@ void Widget::initConnect()
     connect(loadPage, &UpLoad::submitMusic, this, &Widget::onSubmitMusicToHost);
     // 获取歌词文件
     connect(lrc, &LrcPage::sendLrcRequest, this, &Widget::recvAndParseLrc);
+    // 搜索音乐信息
+    connect(ui->searchPage, &SearchResult::searchMusic, this, &Widget::onSearchMusic);
 }
 
 void Widget::initPlayer()
@@ -263,6 +266,21 @@ void Widget::playAllMusicOfCommonPage(CommonPage *page, int index)
     playList->clear();
     // 添加当前页音乐
     page->addMusicToPlaylist(musicList, playList);
+    // 从 index 开始播放, 设置播放模式
+    playList->setCurrentIndex(index);
+    playList->setPlaybackMode(QMediaPlaylist::Loop);
+
+    player->play();
+}
+
+void Widget::playAllMusicOfSearchPage(SearchResult *page, int index)
+{
+    // 清空 playlist 歌曲
+    playList->clear();
+
+    qDebug() << "我要添加当前页音乐了哦";
+    // 添加当前页音乐
+    page->addMusicToPlaylist(playList);
     // 从 index 开始播放, 设置播放模式
     playList->setCurrentIndex(index);
     playList->setPlaybackMode(QMediaPlaylist::Loop);
@@ -516,6 +534,12 @@ void Widget::playMusicByIndex(CommonPage *page, int index)
     playAllMusicOfCommonPage(page, index);
 }
 
+void Widget::playOnlineMusicByIndex(SearchResult *page, int index)
+{
+    qDebug() << "playOnlineMusicByIndex";
+    playAllMusicOfSearchPage(page, index);
+}
+
 void Widget::setPlayerMuted(bool isMuted)
 {
     player->setMuted(isMuted);
@@ -643,3 +667,21 @@ void Widget::recvAndParseLrc(const QUrl &url, const ParseFunc task)
         task(content);
     });
 }
+
+void Widget::onSearchMusic(const QString &musicName)
+{
+    srv->searchMusic(musicName);
+    connect(srv, &ServerConnection::searchResultReady, this, &Widget::onSearchReady);
+}
+
+void Widget::onSearchReady(QVector<Music> musicVec)
+{
+    QVector<Music*> musics;
+    for (auto &music : musicVec) {
+        // 自动查重
+        musicList.addMusic(music);
+        musics.append(musicList.findMUsicByQUrl(music.getMusicQUrl()));
+    }
+    ui->searchPage->initSearchPage(musics);
+}
+

@@ -1,6 +1,7 @@
 #ifndef LISTITEMBOX_H
 #define LISTITEMBOX_H
 
+#include "music.h"
 #include <QWidget>
 
 namespace Ui {
@@ -19,6 +20,7 @@ public:
     void setMusicSinger(const QString &);
     void setMusicAlbum(const QString &);
     void setLikeMusic(bool islike);
+    void setMusic(const Music*);
 
 
 signals:

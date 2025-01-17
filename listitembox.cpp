@@ -39,6 +39,14 @@ void ListItemBox::setLikeMusic(bool islike)
     }
 }
 
+void ListItemBox::setMusic(const Music *music)
+{
+    setMusicName(music->getMusicName());
+    setMusicAlbum(music->getMusicAlbum());
+    setMusicSinger(music->getMusicSinger());
+    setLikeMusic(music->getLike());
+}
+
 void ListItemBox::on_likeBtn_clicked()
 {
     this->isLike = !this->isLike;

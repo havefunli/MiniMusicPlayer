@@ -1,11 +1,13 @@
 #include "serverconnection.h"
 #include <QFile>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QMessageBox>
 
 const QUrl ServerConnection::RandomMusicUrl("http://192.168.254.130:8888/getRandomMusic");
 const QUrl ServerConnection::UpLoadMusicUrl("http://192.168.254.130:8888/uploadMusic");
 const QString ServerConnection::musicFileUrlPrefix = "http://192.168.254.130:8888/Music/";
+const QString ServerConnection::musicSearchPrefix = "http://192.168.254.130:8888/getMusicInfo/";
 
 ServerConnection::ServerConnection(QObject *parent)
     : QObject(parent)
@@ -123,22 +125,50 @@ void ServerConnection::getRandomMusic()
         if (statusCode == 200) {
             // 获取音乐信息
             QJsonDocument jsonDoc = QJsonDocument::fromJson(reply->readAll());
+            QJsonObject jsonObj = jsonDoc.object();
             // 构造一个 Music 对象
-            Music music;
+            Music music(jsonObj);
             music.setLocal(false);
-            music.setMusicId(jsonDoc["uid"].toString());
-            music.setMusicName(jsonDoc["musicName"].toString());
-            music.setMusicSinger(jsonDoc["musicSinger"].toString());
-            music.setMusicAlbum(jsonDoc["musicAlbum"].toString());
-            music.setMusicDuration(jsonDoc["duration"].toString().toLongLong());
-            music.setMusicQUrl(musicFileUrlPrefix + jsonDoc["musicFileName"].toString());
-
             qDebug() << "随机获取的音乐是 " << music.getMusicName();
-
             emit randomMusicReady(music);
         } else {
             QMessageBox::warning(nullptr, "警告", "音乐获取失败");
         }
+        reply->deleteLater();
+    });
+}
+
+void ServerConnection::searchMusic(const QString &musicName)
+{
+    QUrl srcUrl = musicSearchPrefix + musicName;
+    // 设置目标 url
+    QNetworkRequest request(srcUrl);
+    // 发起请求
+    QNetworkReply *reply = networkManager->get(request);
+    // 等待响应
+    connect(reply, &QNetworkReply::finished, this, [=](){
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 200) {
+            // 获取数据
+            QVector<Music> musicVec;
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(reply->readAll());
+            // 搜索结果不为空
+            if (jsonDoc.isArray()) {
+                QJsonArray jsonArray = jsonDoc.array();
+                // 遍历每一个音乐
+                for (const auto &value : jsonArray) {
+                    QJsonObject obj = value.toObject();
+                    Music music(obj);
+                    // 非本地的
+                    music.setLocal(false);
+                    musicVec.push_back(music);
+                }
+            }
+            emit searchResultReady(musicVec);
+        } else {
+            QMessageBox::warning(nullptr, "警告", "音乐搜索失败");
+        }
+
         reply->deleteLater();
     });
 }
