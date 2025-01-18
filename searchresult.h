@@ -24,6 +24,7 @@ public:
 signals:
     void searchMusic(const QString &);
     void playMusicByIndex(SearchResult*, int);
+    void upDateLikeMusic(const QString&, const bool);
 
 private:
     Ui::SearchResult *ui;

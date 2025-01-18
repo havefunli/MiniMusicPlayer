@@ -56,6 +56,13 @@ void SearchResult::initSearchPage(QVector<Music*> &musics)
         QListWidgetItem *item = new QListWidgetItem(ui->musicList);
         item->setSizeHint(QSize(itemBox->width(), itemBox->height()));
         ui->musicList->setItemWidget(item, itemBox);
+
+        // 拦截处理 like 状态改变的信号
+        connect(itemBox, &ListItemBox::likeStatusChanged, this, [=](bool isLike){
+            // 更新界面 and 音乐状态
+            emit upDateLikeMusic(music->getMusicId(), isLike);
+        });
+
     }
 }
 

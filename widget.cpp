@@ -29,6 +29,9 @@ Widget::Widget(QWidget *parent)
     initMusicList();
     initPlayer();
     initConnect();
+
+    // 显示到第一个界面
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 Widget::~Widget()
@@ -194,6 +197,7 @@ void Widget::initConnect()
     connect(ui->localPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
     connect(ui->likePage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
     connect(ui->recentPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
+    connect(ui->searchPage, &SearchResult::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
 
     // 点击显示 Lrc
     connect(ui->lrcWord, &QPushButton::clicked, this, &Widget::onLrcWordClicked);
@@ -406,7 +410,6 @@ void Widget::upDateLikeMusicAndPage(const QString &musicID, const bool isLike)
     ui->recentPage->reFresh(musicList);
     ui->localPage->reFresh(musicList);
 }
-
 
 void Widget::on_volume_clicked()
 {
