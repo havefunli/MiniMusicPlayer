@@ -108,26 +108,8 @@ void Widget::initUi()
     lrcAnimation->setStartValue(QRect(10, 10 + lrc->height(), lrc->width(), lrc->height()));
     lrcAnimation->setEndValue(QRect(10, 10, lrc->width(), lrc->height()));
 
-    // 搜索提示
-    QStringList list;
-    // 创建 QCompleter 设置提示语
-    QCompleter *completer = new QCompleter(list, this);
-    completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-    // 修改下拉框的样式
-    QAbstractItemView *view = completer->popup();
-    view->setStyleSheet(
-        "QListView {"
-        "    font-size: 15px;"
-        "    font-family: 'Microsoft YaHei';"
-        "    color: #333333;"
-        "    background-color: #ffffff;"
-        "    border: 1px solid #E3E3E3;"
-        "    border-radius: 5px;"
-        "}"
-    );
-    // 设置 completer 到 QLineEdit
-    ui->lineEdit->setCompleter(completer);
-
+    ui->todo->setPixmap(QPixmap(":/images/todo.png"));
+    ui->todo->setScaledContents(true);
 
     // 调整 upload 图标
     ui->upLoad->setIcon(QIcon(":/images/upload_1.png"));
@@ -216,6 +198,7 @@ void Widget::initConnect()
     connect(ui->likePage, &CommonPage::playAll, this, &Widget::onPlayAll);
     connect(ui->localPage, &CommonPage::playAll, this, &Widget::onPlayAll);
     connect(ui->recentPage, &CommonPage::playAll, this, &Widget::onPlayAll);
+    connect(ui->searchPage, &SearchResult::playAll, this, &Widget::onPlayAllSearch);
     // 双击处理
     connect(ui->likePage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
     connect(ui->localPage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
@@ -351,7 +334,12 @@ void Widget::onBtFormClick(int pageId)
             bt->clearBackground();
         }
     }
-    qDebug() << "turn to pageId = " << pageId;
+
+    if (pageId == 1) {
+        QMessageBox::information(nullptr, "信息", "抱歉，该功能程序猿还在开发中");
+    }
+
+    // qDebug() << "turn to pageId = " << pageId;
 }
 
 void Widget::searchClicked()
@@ -539,7 +527,7 @@ void Widget::playMusicByIndex(CommonPage *page, int index)
 
 void Widget::playOnlineMusicByIndex(SearchResult *page, int index)
 {
-    qDebug() << "playOnlineMusicByIndex";
+    // qDebug() << "playOnlineMusicByIndex";
     playAllMusicOfSearchPage(page, index);
 }
 
@@ -658,9 +646,9 @@ void Widget::on_upLoad_clicked()
     loadPage->show();
 }
 
-void Widget::onSubmitMusicToHost(const QUrl musicUrl, const QUrl lrcUrl)
+void Widget::onSubmitMusicToHost(const UpLoad::UpLoadInfo info)
 {
-    srv->SendMusicToHost(musicUrl, lrcUrl);
+    srv->SendMusicToHost(info);
 }
 
 void Widget::recvAndParseLrc(const QUrl &url, const ParseFunc task)
@@ -686,5 +674,10 @@ void Widget::onSearchReady(QVector<Music> musicVec)
         musics.append(musicList.findMUsicByQUrl(music.getMusicQUrl()));
     }
     ui->searchPage->initSearchPage(musics);
+}
+
+void Widget::onPlayAllSearch()
+{
+    playAllMusicOfSearchPage(ui->searchPage, 0);
 }
 

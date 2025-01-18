@@ -83,5 +83,6 @@
         <file>images/trayicon.png</file>
         <file>images/upload.png</file>
         <file>images/upload_1.png</file>
+        <file>images/todo.png</file>
     </qresource>
 </RCC>

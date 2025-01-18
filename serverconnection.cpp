@@ -14,10 +14,10 @@ ServerConnection::ServerConnection(QObject *parent)
     , networkManager(new QNetworkAccessManager(this))
 {}
 
-void ServerConnection::SendMusicToHost(const QUrl &musicUrl, const QUrl &lrcUrl)
+void ServerConnection::SendMusicToHost(const UpLoad::UpLoadInfo info)
 {
     // 将数据解析
-    Music music(musicUrl);
+    Music music(info.musicUrl);
     // 设置目标 Url
     QNetworkRequest request(UpLoadMusicUrl);
     // 创建表单对象
@@ -38,6 +38,11 @@ void ServerConnection::SendMusicToHost(const QUrl &musicUrl, const QUrl &lrcUrl)
     singerPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"musicSinger\""));
     singerPart.setBody(music.getMusicSinger().toUtf8());
     multiPart->append(singerPart);
+    // 歌手介绍
+    QHttpPart infoPart;
+    infoPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"singerInfo\""));
+    infoPart.setBody(info.singerInfo.toUtf8());
+    multiPart->append(infoPart);
     // 专辑名
     QHttpPart albumPart;
     albumPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"musicAlbum\""));
@@ -49,10 +54,13 @@ void ServerConnection::SendMusicToHost(const QUrl &musicUrl, const QUrl &lrcUrl)
     durationPart.setBody(QString::number(music.getMusicDuration()).toUtf8());
     multiPart->append(durationPart);
 
-    // 添加歌曲和歌词
-    QFile *musicFile = new QFile(musicUrl.toLocalFile());
-    QFile *lrcFile = new QFile(lrcUrl.toLocalFile());
-    if (!musicFile->open(QIODevice::ReadOnly) || !lrcFile->open(QIODevice::ReadOnly)) {
+    // 添加歌曲和歌词和图片
+    QFile *musicFile = new QFile(info.musicUrl.toLocalFile());
+    QFile *lrcFile = new QFile(info.lrcUrl.toLocalFile());
+    QFile *imageFile = new QFile(info.imageUrl.toLocalFile());
+    if (!musicFile->open(QIODevice::ReadOnly) ||
+            !lrcFile->open(QIODevice::ReadOnly) ||
+            !imageFile->open(QIODevice::ReadOnly)) {
         QMessageBox::information(nullptr, "警告", "你的音乐相关文件不存在");
         delete multiPart; // 记得释放
         return;
@@ -61,10 +69,14 @@ void ServerConnection::SendMusicToHost(const QUrl &musicUrl, const QUrl &lrcUrl)
     // 管理文件生命周期
     musicFile->setParent(multiPart);
     lrcFile->setParent(multiPart);
+    imageFile->setParent(multiPart);
 
     QString filePath = music.getMusicQUrl().toLocalFile();
     QString musicFileName = filePath.mid(filePath.lastIndexOf('/') + 1);
     QString lrcFileName = musicFileName.left(musicFileName.lastIndexOf('.')) + ".lrc";
+
+    QString imageFilePath = info.imageUrl.toLocalFile();
+    QString imageFileName = imageFilePath.mid(imageFilePath.lastIndexOf('/') + 1);
 
     // 歌曲
     QHttpPart musicPart;
@@ -80,9 +92,17 @@ void ServerConnection::SendMusicToHost(const QUrl &musicUrl, const QUrl &lrcUrl)
                       QVariant("form-data; name=\"lrc\"; filename = \"" + lrcFileName + "\""));
     lrcPart.setBodyDevice(lrcFile);
     multiPart->append(lrcPart);
+    // 图片
+    QHttpPart imagePart;
+    imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
+    imagePart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                        QVariant("form-data; name=\"image\"; filename = \"" + imageFileName + "\""));
+    multiPart->append(imagePart);
 
     QNetworkReply *reply = networkManager->post(request, multiPart);
     multiPart->setParent(reply);
+
+    qDebug() << "我已发送等待处理";
 
     // 处理回复
     connect(reply, &QNetworkReply::finished, this, [reply]() {

@@ -37,6 +37,10 @@
        <height>60</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true">
+</string>
+     </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="keywords">
@@ -108,6 +112,7 @@
         <property name="styleSheet">
          <string notr="true">#play
 {
+	border: none;
 	background-color: #e3e3e3;
 	border-radius: 5px;
 }

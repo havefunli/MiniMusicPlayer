@@ -70,8 +70,12 @@ void SearchResult::addMusicToPlaylist(QMediaPlaylist *playList)
 {
     playList->clear();
     for (auto &music : musicsPtr) {
-        qDebug() << music->getMusicQUrl();
+        // qDebug() << music->getMusicQUrl();
         playList->addMedia(music->getMusicQUrl());
     }
 }
 
+void SearchResult::on_play_clicked()
+{
+    emit playAll();
+}

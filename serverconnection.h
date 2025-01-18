@@ -1,6 +1,6 @@
 #ifndef SERVERCONNECTION_H
 #define SERVERCONNECTION_H
-
+#include "upload.h"
 #include "music.h"
 #include <QObject>
 #include <QHttpPart>
@@ -14,7 +14,7 @@ public:
     explicit ServerConnection(QObject *parent = nullptr);
 
     // 发送一个音乐文件
-    void SendMusicToHost(const QUrl &, const QUrl &);
+    void SendMusicToHost(const UpLoad::UpLoadInfo);
     // 接受 lrc 文件
     void rcvLrcFromHost(const QUrl &);
     // 接受一个随机线上音乐

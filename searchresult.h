@@ -25,6 +25,10 @@ signals:
     void searchMusic(const QString &);
     void playMusicByIndex(SearchResult*, int);
     void upDateLikeMusic(const QString&, const bool);
+    void playAll();
+
+private slots:
+    void on_play_clicked();
 
 private:
     Ui::SearchResult *ui;

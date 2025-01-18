@@ -766,7 +766,7 @@ QPushButton:hover
                <string notr="true"/>
               </property>
               <property name="currentIndex">
-               <number>6</number>
+               <number>1</number>
               </property>
               <widget class="QWidget" name="recPage">
                <widget class="QScrollArea" name="scrollArea">
@@ -902,35 +902,35 @@ QScrollBar:handle:vertical
                </widget>
               </widget>
               <widget class="QWidget" name="radioPage">
-               <widget class="QLabel" name="label_2">
-                <property name="geometry">
-                 <rect>
-                  <x>170</x>
-                  <y>110</y>
-                  <width>40</width>
-                  <height>12</height>
-                 </rect>
+               <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <property name="spacing">
+                 <number>0</number>
                 </property>
-                <property name="text">
-                 <string>TextLabel</string>
+                <property name="leftMargin">
+                 <number>0</number>
                 </property>
-               </widget>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="todo">
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
-              <widget class="QWidget" name="musicPage">
-               <widget class="QLabel" name="label_3">
-                <property name="geometry">
-                 <rect>
-                  <x>260</x>
-                  <y>120</y>
-                  <width>40</width>
-                  <height>12</height>
-                 </rect>
-                </property>
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-               </widget>
-              </widget>
+              <widget class="QWidget" name="musicPage"/>
               <widget class="CommonPage" name="likePage"/>
               <widget class="CommonPage" name="localPage"/>
               <widget class="CommonPage" name="recentPage"/>

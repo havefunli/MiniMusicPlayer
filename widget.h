@@ -100,10 +100,11 @@ private slots:
     void onMusicQuit();
     void on_upLoad_clicked();
 
-    void onSubmitMusicToHost(const QUrl, const QUrl); // 上传音乐到服务端
+    void onSubmitMusicToHost(const UpLoad::UpLoadInfo); // 上传音乐到服务端
     void recvAndParseLrc(const QUrl &, const ParseFunc); // 获取并且解析 lrc 文件
     void onSearchMusic(const QString &); // 搜索音乐
     void onSearchReady(QVector<Music>); // 处理搜索音乐
+    void onPlayAllSearch(); // 播放所有搜索音乐
 
 private:
     Ui::MusicPlayer *ui;

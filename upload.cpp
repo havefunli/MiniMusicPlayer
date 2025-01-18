@@ -16,6 +16,7 @@ UpLoad::UpLoad(QWidget *parent) :
     });
     connect(ui->music, &QPushButton::clicked, this, &UpLoad::upLoadMusic);
     connect(ui->lrc, &QPushButton::clicked, this, &UpLoad::upLoadLrc);
+    connect(ui->image, &QPushButton::clicked, this, &UpLoad::upLoadImage);
     connect(ui->subBtn, &QPushButton::clicked, this, &UpLoad::onSubmitBtnClicked);
 }
 
@@ -52,16 +53,50 @@ void UpLoad::upLoadLrc()
     }
 }
 
+void UpLoad::upLoadImage()
+{
+    fileDialog->setWindowTitle("歌手图片");
+    fileDialog->setDirectory("C:\\Users\acer\\Desktop\\Project\\MiniMusicPlayer\\musics");
+    // 文件筛选
+    QStringList fileName;
+    fileName << "*.png" << "*.jpg";
+    fileDialog->setNameFilters(fileName);
+
+    if (fileDialog->exec() == QFileDialog::Accepted) {
+        imageFile = fileDialog->selectedUrls().front();
+    }
+}
+
+
+
 void UpLoad::onSubmitBtnClicked()
 {
-    if (musicFile.isEmpty() || lrcFile.isEmpty()) {
-        QMessageBox::information(this, "上传出错啦", "请将两个指定的文件上传哦");
+    if (musicFile.isEmpty() || lrcFile.isEmpty() || imageFile.isEmpty()) {
+        QMessageBox::information(this, "上传出错啦", "请将指定的文件上传哦");
+        return;
     }
 
-    emit submitMusic(musicFile, lrcFile);
+    QString nameStr, infoStr;
+    nameStr = ui->name->text().trimmed();
+    infoStr = ui->info->text().trimmed();
+
+    if (nameStr.isEmpty() || infoStr.isEmpty()) {
+        QMessageBox::information(this, "上传出错啦", "请填写字段信息");
+        return;
+    }
+
+    UpLoadInfo musicInfo;
+    musicInfo.singerName = nameStr;
+    musicInfo.singerInfo = infoStr;
+    musicInfo.imageUrl = imageFile;
+    musicInfo.musicUrl = musicFile;
+    musicInfo.lrcUrl = lrcFile;
+
+    emit submitMusic(musicInfo);
 
     // 清除便于下次上传
     musicFile.clear();
     lrcFile.clear();
+    imageFile.clear();
 }
 
