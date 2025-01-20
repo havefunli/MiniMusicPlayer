@@ -57,7 +57,8 @@
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="styleSheet">
-       <string notr="true">border: none;</string>
+       <string notr="true">border: none;
+border-radius:50%;</string>
       </property>
       <property name="text">
        <string/>

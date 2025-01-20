@@ -26,6 +26,7 @@ SOURCES += \
     serverconnection.cpp \
     singer.cpp \
     singeritem.cpp \
+    singerpage.cpp \
     upload.cpp \
     volumetool.cpp \
     widget.cpp
@@ -44,6 +45,7 @@ HEADERS += \
     serverconnection.h \
     singer.h \
     singeritem.h \
+    singerpage.h \
     upload.h \
     volumetool.h \
     widget.h
@@ -59,6 +61,7 @@ FORMS += \
     searchresult.ui \
     singer.ui \
     singeritem.ui \
+    singerpage.ui \
     upload.ui \
     volumetool.ui \
     widget.ui

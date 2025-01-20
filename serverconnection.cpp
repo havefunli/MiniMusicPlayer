@@ -6,6 +6,8 @@
 
 const QUrl ServerConnection::RandomMusicUrl("http://192.168.17.128:8888/getRandomMusic");
 const QUrl ServerConnection::UpLoadMusicUrl("http://192.168.17.128:8888/uploadMusic");
+const QUrl ServerConnection::SingerNameUrl("http://192.168.17.128:8888/getSingerName");
+const QString ServerConnection::SingerImageUrl("http://192.168.17.128:8888/images/");
 const QString ServerConnection::musicFileUrlPrefix = "http://192.168.17.128:8888/Music/";
 const QString ServerConnection::musicSearchPrefix = "http://192.168.17.128:8888/getMusicInfo/";
 
@@ -103,8 +105,6 @@ void ServerConnection::SendMusicToHost(const UpLoad::UpLoadInfo info)
     QNetworkReply *reply = networkManager->post(request, multiPart);
     multiPart->setParent(reply);
 
-    qDebug() << "我已发送等待处理";
-
     // 处理回复
     connect(reply, &QNetworkReply::finished, this, [reply]() {
         int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
@@ -157,6 +157,68 @@ void ServerConnection::getRandomMusic()
         }
         reply->deleteLater();
     });
+}
+
+void ServerConnection::getSingerName()
+{
+    // qDebug() << "发送数据请求等待返回";
+    QNetworkRequest request(SingerNameUrl);
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [=](){
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 200) {
+            // qDebug() << "数据返回成功，解析数据";
+            // 获取数据
+            QVector<Singer*> singerVec;
+            // 解析数据
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(reply->readAll());
+            // 搜索结果不为空
+            if (jsonDoc.isArray()) {
+                QJsonArray jsonArray = jsonDoc.array();
+                for (const auto &value : jsonArray) {
+                    Singer *singer = new Singer();
+                    singer->setSingerName(value.toString());
+                    singerVec.push_back(singer);
+                    // qDebug() << "singerName: " << singer->getSingerName();
+                }
+            }
+            emit singerNameReady(singerVec);
+        } else {
+            QMessageBox::warning(nullptr, "警告", "歌手获取失败");
+        }
+        reply->deleteLater();
+    });
+}
+
+void ServerConnection::getSingerImage(QVector<Singer *> singers)
+{
+    // 计数
+    int *cnt = new int(0);
+    for (int i = 0; i < singers.size(); i++) {
+        // 构建数据请求
+        QUrl srcUrl = SingerImageUrl + singers[i]->getSingerName() + ".png";
+        QNetworkRequest request(srcUrl);
+        QNetworkReply *reply = networkManager->get(request);
+        // 等待数据响应
+        connect(reply, &QNetworkReply::finished, this, [=](){
+            int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            if (statusCode == 200) {
+                singers[i]->setSingerImage(reply->readAll());
+                *cnt += 1;
+
+                // 判断数据是否接受完整
+                if (*cnt == singers.size()) {
+
+                    emit singerImageReady(singers);
+
+                    delete cnt;
+                }
+
+            } else {
+               QMessageBox::warning(nullptr, "警告", "歌手图片获取失败");
+            }
+        });
+    }
 }
 
 void ServerConnection::searchMusic(const QString &musicName)

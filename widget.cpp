@@ -174,6 +174,7 @@ void Widget::initConnect()
     connect(ui->local, &BtForm::btClick, this, &Widget::onBtFormClick);
     connect(ui->recent, &BtForm::btClick, this, &Widget::onBtFormClick);
     connect(ui->lineEdit, &QLineEdit::returnPressed, this, &Widget::searchClicked);
+    connect(ui->music, &BtForm::btClick, this, &Widget::onBtFormClick);
 
     // 处理喜欢音乐的改变
     connect(ui->localPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
@@ -235,6 +236,11 @@ void Widget::initConnect()
     connect(lrc, &LrcPage::sendLrcRequest, this, &Widget::recvAndParseLrc);
     // 搜索音乐信息
     connect(ui->searchPage, &SearchResult::searchMusic, this, &Widget::onSearchMusic);
+
+    // 人物图片就绪
+    connect(srv, &ServerConnection::singerImageReady, this, [=](QVector<Singer*> singers){
+        ui->singerPage->initPage(singers);
+    });
 }
 
 void Widget::initPlayer()
@@ -335,11 +341,16 @@ void Widget::onBtFormClick(int pageId)
         }
     }
 
+    // 某些页面的指定处理
     if (pageId == 1) {
         QMessageBox::information(nullptr, "信息", "抱歉，该功能程序猿还在开发中");
+    } else if (pageId == 2) {
+        srv->getSingerName();
+        connect(srv, &ServerConnection::singerNameReady, this, [=](QVector<Singer*> singers){
+            // qDebug() << "数据返回成功，初始化界面";
+            srv->getSingerImage(singers);
+        });
     }
-
-    // qDebug() << "turn to pageId = " << pageId;
 }
 
 void Widget::searchClicked()

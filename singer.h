@@ -2,23 +2,35 @@
 #define SINGER_H
 
 #include <QWidget>
+#include "music.h"
 
 namespace Ui {
-class singer;
+class Singer;
 }
 
-class singer : public QWidget
+class Singer : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit singer(QWidget *parent = nullptr);
-    ~singer();
+    explicit Singer(QWidget *parent = nullptr);
+    ~Singer();
+
+    QString getSingerName() const;
+    void setSingerName(const QString &value);
+
+    QString getSingerInfo() const;
+    void setSingerInfo(const QString &value);
+
+    QByteArray getSingerImage() const;
+    void setSingerImage(const QByteArray &value);
 
 private:
-    int row = 0;
-    int col = 0;   // 默认一个页最多 4 个歌手
-    Ui::singer *ui;
+    Ui::Singer *ui;
+    QString singerName;
+    QString singerInfo;
+    QByteArray singerImage;
+    QVector<Music*> musics;
 };
 
 #endif // SINGER_H

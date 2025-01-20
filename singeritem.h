@@ -15,6 +15,9 @@ public:
     explicit SingerItem(QWidget *parent = nullptr);
     ~SingerItem();
 
+    void setSingerName(const QString &);
+    void setSingerImage(const QByteArray &);
+
 private:
     Ui::SingerItem *ui;
 };
