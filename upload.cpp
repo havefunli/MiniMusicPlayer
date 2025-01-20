@@ -56,7 +56,7 @@ void UpLoad::upLoadLrc()
 void UpLoad::upLoadImage()
 {
     fileDialog->setWindowTitle("歌手图片");
-    fileDialog->setDirectory("C:\\Users\acer\\Desktop\\Project\\MiniMusicPlayer\\musics");
+    fileDialog->setDirectory("C:\\Users\acer\\Desktop\\Project\\MiniMusicPlayer\\images\\singer");
     // 文件筛选
     QStringList fileName;
     fileName << "*.png" << "*.jpg";

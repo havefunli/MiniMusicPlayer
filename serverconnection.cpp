@@ -4,10 +4,10 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 
-const QUrl ServerConnection::RandomMusicUrl("http://192.168.254.130:8888/getRandomMusic");
-const QUrl ServerConnection::UpLoadMusicUrl("http://192.168.254.130:8888/uploadMusic");
-const QString ServerConnection::musicFileUrlPrefix = "http://192.168.254.130:8888/Music/";
-const QString ServerConnection::musicSearchPrefix = "http://192.168.254.130:8888/getMusicInfo/";
+const QUrl ServerConnection::RandomMusicUrl("http://192.168.17.128:8888/getRandomMusic");
+const QUrl ServerConnection::UpLoadMusicUrl("http://192.168.17.128:8888/uploadMusic");
+const QString ServerConnection::musicFileUrlPrefix = "http://192.168.17.128:8888/Music/";
+const QString ServerConnection::musicSearchPrefix = "http://192.168.17.128:8888/getMusicInfo/";
 
 ServerConnection::ServerConnection(QObject *parent)
     : QObject(parent)
@@ -97,6 +97,7 @@ void ServerConnection::SendMusicToHost(const UpLoad::UpLoadInfo info)
     imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
     imagePart.setHeader(QNetworkRequest::ContentDispositionHeader,
                         QVariant("form-data; name=\"image\"; filename = \"" + imageFileName + "\""));
+    imagePart.setBodyDevice(imageFile);
     multiPart->append(imagePart);
 
     QNetworkReply *reply = networkManager->post(request, multiPart);
