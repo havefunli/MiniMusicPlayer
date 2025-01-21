@@ -241,6 +241,8 @@ void Widget::initConnect()
     connect(srv, &ServerConnection::singerImageReady, this, [=](QVector<Singer*> singers){
         ui->singerPage->initPage(singers);
     });
+    // 点击具体的歌手
+    connect(ui->singerPage, &SingerPage::singerClicked, this, &Widget::onSingerClicked);
 }
 
 void Widget::initPlayer()
@@ -345,9 +347,10 @@ void Widget::onBtFormClick(int pageId)
     if (pageId == 1) {
         QMessageBox::information(nullptr, "信息", "抱歉，该功能程序猿还在开发中");
     } else if (pageId == 2) {
-        srv->getSingerName();
+        srv->getSingerNameAndInfo();
         connect(srv, &ServerConnection::singerNameReady, this, [=](QVector<Singer*> singers){
             // qDebug() << "数据返回成功，初始化界面";
+            this->singers.addSingers(singers);
             srv->getSingerImage(singers);
         });
     }
@@ -592,9 +595,12 @@ void Widget::onMediaChanged(const QMediaContent &content)
 
     // 获取音乐信息
     if (!content.isNull()) {
+        // 不止一个返回
         QUrl url = content.request().url();
         music = musicList.findMUsicByQUrl(url);
         if (music != nullptr) {
+            // 改变音乐状态
+            music->setHistory(true);
             musicName = music->getMusicName();
             musicSinger = music->getMusicSinger();
         }
@@ -680,7 +686,7 @@ void Widget::onSearchReady(QVector<Music> musicVec)
 {
     QVector<Music*> musics;
     for (auto &music : musicVec) {
-        // 自动查重
+        // 自动查重更新
         musicList.addMusic(music);
         musics.append(musicList.findMUsicByQUrl(music.getMusicQUrl()));
     }
@@ -690,5 +696,38 @@ void Widget::onSearchReady(QVector<Music> musicVec)
 void Widget::onPlayAllSearch()
 {
     playAllMusicOfSearchPage(ui->searchPage, 0);
+}
+
+void Widget::onSingerClicked(const QString singerName)
+{
+    Singer *target_singer = singers.findSinger(singerName);
+
+    if (target_singer == nullptr) {
+        QMessageBox::warning(nullptr, "出错", "歌手信息不存在");
+        return;
+    }
+
+    // 先预先设置该界面时是属于哪一个歌手，方便后续获取
+    ui->singerInfo->setSingerName(singerName);
+    // 获取该歌手的音乐
+    srv->getSingerMusic(target_singer->getSingerName());
+    connect(srv, &ServerConnection::singerMusicReady, this, &Widget::onSingerMusicReady);
+}
+
+void Widget::onSingerMusicReady(QVector<Music> musics)
+{
+    Singer *target_singer = singers.findSinger(ui->singerInfo->getSingerName());
+    if (target_singer == nullptr) {
+        QMessageBox::warning(nullptr, "错误", "你的歌手信息不存在");
+        return;
+    }
+
+    for (auto &music : musics) {
+        musicList.addMusic(music);
+        target_singer->addMusic(musicList.findMUsicByQUrl(music.getMusicQUrl()));
+    }
+
+    ui->singerInfo->initPage(target_singer);
+    ui->stackedWidget->setCurrentIndex(7);
 }
 

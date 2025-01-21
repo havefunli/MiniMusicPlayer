@@ -6,7 +6,8 @@
 
 const QUrl ServerConnection::RandomMusicUrl("http://192.168.17.128:8888/getRandomMusic");
 const QUrl ServerConnection::UpLoadMusicUrl("http://192.168.17.128:8888/uploadMusic");
-const QUrl ServerConnection::SingerNameUrl("http://192.168.17.128:8888/getSingerName");
+const QUrl ServerConnection::SingerNameUrl("http://192.168.17.128:8888/getSingerNameAndInfo");
+const QString ServerConnection::SingerMusicUrl("http://192.168.17.128:8888/getSingerMusic/");
 const QString ServerConnection::SingerImageUrl("http://192.168.17.128:8888/images/");
 const QString ServerConnection::musicFileUrlPrefix = "http://192.168.17.128:8888/Music/";
 const QString ServerConnection::musicSearchPrefix = "http://192.168.17.128:8888/getMusicInfo/";
@@ -121,6 +122,7 @@ void ServerConnection::SendMusicToHost(const UpLoad::UpLoadInfo info)
 
 void ServerConnection::rcvLrcFromHost(const QUrl &url)
 {
+    qDebug() << url;
     QNetworkRequest requet(url);
     QNetworkReply *reply = networkManager->get(requet);
     connect(reply, &QNetworkReply::finished, this, [=](){
@@ -159,7 +161,7 @@ void ServerConnection::getRandomMusic()
     });
 }
 
-void ServerConnection::getSingerName()
+void ServerConnection::getSingerNameAndInfo()
 {
     // qDebug() << "发送数据请求等待返回";
     QNetworkRequest request(SingerNameUrl);
@@ -176,8 +178,12 @@ void ServerConnection::getSingerName()
             if (jsonDoc.isArray()) {
                 QJsonArray jsonArray = jsonDoc.array();
                 for (const auto &value : jsonArray) {
+                    // 转化
+                    QJsonObject obj = value.toObject();
+                    // 提取数据
                     Singer *singer = new Singer();
-                    singer->setSingerName(value.toString());
+                    singer->setSingerName(obj["singerName"].toString());
+                    singer->setSingerInfo(obj["singerInfo"].toString());
                     singerVec.push_back(singer);
                     // qDebug() << "singerName: " << singer->getSingerName();
                 }
@@ -248,6 +254,41 @@ void ServerConnection::searchMusic(const QString &musicName)
                 }
             }
             emit searchResultReady(musicVec);
+        } else {
+            QMessageBox::warning(nullptr, "警告", "音乐搜索失败");
+        }
+
+        reply->deleteLater();
+    });
+}
+
+void ServerConnection::getSingerMusic(const QString &singerName)
+{
+    QUrl srcUrl = SingerMusicUrl + singerName;
+    // 设置目标 url
+    QNetworkRequest request(srcUrl);
+    // 发起请求
+    QNetworkReply *reply = networkManager->get(request);
+    // 等待响应
+    connect(reply, &QNetworkReply::finished, this, [=](){
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 200) {
+            // 获取数据
+            QVector<Music> musicVec;
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(reply->readAll());
+            // 搜索结果不为空
+            if (jsonDoc.isArray()) {
+                QJsonArray jsonArray = jsonDoc.array();
+                // 遍历每一个音乐
+                for (const auto &value : jsonArray) {
+                    QJsonObject obj = value.toObject();
+                    Music music(obj);
+                    // 非本地的
+                    music.setLocal(false);
+                    musicVec.push_back(music);
+                }
+            }
+            emit singerMusicReady(musicVec);
         } else {
             QMessageBox::warning(nullptr, "警告", "音乐搜索失败");
         }

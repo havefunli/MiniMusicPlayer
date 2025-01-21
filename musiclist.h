@@ -11,7 +11,7 @@ public:
     MusicList();
 
     size_t size() const;
-    void addMusic(const Music &);
+    void addMusic(Music);
     void addMusicByUrl(const QUrl&);
     void addMusicByUrls(const QList<QUrl>&);
 
@@ -23,6 +23,8 @@ public:
     Music *back();
 
     bool isExists(const QUrl&);
+
+    void remove(Music*);
 
     void readFromDB();
     void writeToDB();

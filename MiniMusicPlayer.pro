@@ -25,6 +25,7 @@ SOURCES += \
     searchresult.cpp \
     serverconnection.cpp \
     singer.cpp \
+    singerinfopage.cpp \
     singeritem.cpp \
     singerpage.cpp \
     upload.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     searchresult.h \
     serverconnection.h \
     singer.h \
+    singerinfopage.h \
     singeritem.h \
     singerpage.h \
     upload.h \
@@ -59,7 +61,7 @@ FORMS += \
     recbox.ui \
     recboxitem.ui \
     searchresult.ui \
-    singer.ui \
+    singerinfopage.ui \
     singeritem.ui \
     singerpage.ui \
     upload.ui \

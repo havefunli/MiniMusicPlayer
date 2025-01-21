@@ -27,3 +27,8 @@ void SingerItem::setSingerImage(const QByteArray &byteArr)
     // 调整大小
     ui->singerImage->setScaledContents(true);
 }
+
+void SingerItem::on_btn_clicked()
+{
+    emit singerClicked(ui->singerName->text());
+}

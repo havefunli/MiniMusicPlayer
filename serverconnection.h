@@ -20,12 +20,14 @@ public:
     void rcvLrcFromHost(const QUrl &);
     // 接受一个随机线上音乐
     void getRandomMusic();
-    // 获取歌手名字
-    void getSingerName();
+    // 获取歌手名字和信息
+    void getSingerNameAndInfo();
     // 获取歌手图片
     void getSingerImage(QVector<Singer*>);
     // 搜索音乐
     void searchMusic(const QString &);
+    // 获取歌手的全部音乐
+    void getSingerMusic(const QString &);
 
 signals:
     // 随机音乐就绪了
@@ -38,12 +40,15 @@ signals:
     void singerNameReady(QVector<Singer*>);
     // 图片数据就绪
     void singerImageReady(QVector<Singer*>);
+    // 歌手音乐就绪
+    void singerMusicReady(QVector<Music>);
 
 
 public:
     static const QUrl RandomMusicUrl;
     static const QUrl UpLoadMusicUrl;
     static const QUrl SingerNameUrl;
+    static const QString SingerMusicUrl;
     static const QString SingerImageUrl;
     static const QString musicFileUrlPrefix;
     static const QString musicSearchPrefix;

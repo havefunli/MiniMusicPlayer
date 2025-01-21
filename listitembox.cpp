@@ -1,5 +1,6 @@
 #include "listitembox.h"
 #include "ui_listitembox.h"
+#include <QDebug>
 
 ListItemBox::ListItemBox(QWidget *parent)
     : QWidget(parent)
@@ -49,7 +50,10 @@ void ListItemBox::setMusic(const Music *music)
 
 void ListItemBox::on_likeBtn_clicked()
 {
-    this->isLike = !this->isLike;
+    qDebug() << "喜欢按钮点击了，原来是 " << this->isLike;
+    // this->isLike = !this->isLike; BUG
+    this->isLike = isLike ? false : true;
+    qDebug() << "现在是 " << this->isLike;
     setLikeMusic(isLike);
 
     // 通知 like 状态改变

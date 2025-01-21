@@ -105,6 +105,8 @@ private slots:
     void onSearchMusic(const QString &); // 搜索音乐
     void onSearchReady(QVector<Music>); // 处理搜索音乐
     void onPlayAllSearch(); // 播放所有搜索音乐
+    void onSingerClicked(const QString); // 渲染歌手界面
+    void onSingerMusicReady(QVector<Music>);
 
 private:
     Ui::MusicPlayer *ui;
@@ -112,6 +114,7 @@ private:
     VolumeTool      *vt;          // 声音弹窗
     LrcPage         *lrc;         // 歌词窗口
     MusicList       musicList;    // 管理的音乐
+    SingerList      singers;     // 管理的歌手
     QMediaPlayer    *player;      // 播放器
     QMediaPlaylist  *playList;    // 播放列表
     QSqlDatabase    sqlite;      // 保存音乐信息

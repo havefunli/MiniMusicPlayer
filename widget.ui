@@ -766,7 +766,7 @@ QPushButton:hover
                <string notr="true"/>
               </property>
               <property name="currentIndex">
-               <number>2</number>
+               <number>7</number>
               </property>
               <widget class="QWidget" name="recPage">
                <widget class="QScrollArea" name="scrollArea">
@@ -814,8 +814,8 @@ QScrollBar:handle:vertical
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>919</width>
-                   <height>519</height>
+                   <width>921</width>
+                   <height>521</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -935,6 +935,7 @@ QScrollBar:handle:vertical
               <widget class="CommonPage" name="localPage"/>
               <widget class="CommonPage" name="recentPage"/>
               <widget class="SearchResult" name="searchPage"/>
+              <widget class="SingerInfoPage" name="singerInfo"/>
              </widget>
             </item>
             <item>
@@ -1332,6 +1333,12 @@ QPushButton:hover
    <class>SingerPage</class>
    <extends>QWidget</extends>
    <header location="global">singerpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SingerInfoPage</class>
+   <extends>QWidget</extends>
+   <header location="global">singerinfopage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

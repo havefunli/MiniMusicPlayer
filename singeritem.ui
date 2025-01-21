@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>155</width>
-    <height>240</height>
+    <height>190</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,6 +39,9 @@
         <width>150</width>
         <height>150</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 50px;</string>
       </property>
       <property name="text">
        <string/>
@@ -82,6 +85,9 @@ border-radius:50%;</string>
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>

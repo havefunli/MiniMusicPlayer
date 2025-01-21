@@ -2,6 +2,7 @@
 #define SINGERPAGE_H
 
 #include <QWidget>
+#include <QGridLayout>
 #include "singer.h"
 
 namespace Ui {
@@ -18,10 +19,15 @@ public:
 
      // 初始化界面
      void initPage(QVector<Singer*> singerVec);
+     // 清除之前的内容
+     void cleanLayout();
+
+signals:
+     void singerClicked(const QString);
 
 private:
     Ui::SingerPage *ui;
-    QVector<Singer*> singers;
+    QGridLayout *gridLayout;
 };
 
 #endif // SINGERPAGE_H

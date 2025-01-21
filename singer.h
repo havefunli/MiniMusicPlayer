@@ -25,12 +25,31 @@ public:
     QByteArray getSingerImage() const;
     void setSingerImage(const QByteArray &value);
 
+    QVector<Music*> getSingerMusic() const;
+    void addMusic(Music*);
+
 private:
     Ui::Singer *ui;
     QString singerName;
     QString singerInfo;
     QByteArray singerImage;
     QVector<Music*> musics;
+};
+
+
+class SingerList
+{
+public:
+    SingerList() = default;
+
+    void addSinger(Singer*);
+
+    void addSingers(QVector<Singer*>);
+
+    Singer *findSinger(const QString&);
+
+private:
+    QVector<Singer*> singers;
 };
 
 #endif // SINGER_H

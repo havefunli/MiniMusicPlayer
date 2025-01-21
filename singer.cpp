@@ -42,3 +42,35 @@ void Singer::setSingerImage(const QByteArray &value)
 {
     singerImage = value;
 }
+
+QVector<Music *> Singer::getSingerMusic() const
+{
+    return musics;
+}
+
+void Singer::addMusic(Music *music)
+{
+    musics.append(music);
+}
+
+void SingerList::addSinger(Singer *singer)
+{
+    singers.append(singer);
+}
+
+void SingerList::addSingers(QVector<Singer *> singers)
+{
+    for (auto &singer : singers) {
+        addSinger(singer);
+    }
+}
+
+Singer *SingerList::findSinger(const QString &singerName)
+{
+    for (auto &singer : singers) {
+        if (singer->getSingerName() == singerName) {
+            return singer;
+        }
+    }
+    return nullptr;
+}

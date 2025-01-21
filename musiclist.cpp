@@ -12,11 +12,15 @@ size_t MusicList::size() const
     return musicVec.size();
 }
 
-void MusicList::addMusic(const Music &music)
+void MusicList::addMusic(Music music)
 {
-    if (!isExists(music.getMusicQUrl())) {
-        musicVec.append(music);
+    Music *musicPtr = findMUsicByQUrl(music.getMusicQUrl());
+    if (musicPtr != nullptr) {
+        // qDebug() << "曾经听过";
+        music.setLike(musicPtr->getLike());
+        remove(musicPtr);
     }
+    musicVec.append(music);
 }
 
 void MusicList::addMusicByUrl(const QUrl &url)
@@ -73,6 +77,15 @@ Music *MusicList::back()
 bool MusicList::isExists(const QUrl &url)
 {
     return findMUsicByQUrl(url) != nullptr ? true : false;
+}
+
+void MusicList::remove(Music *musicPtr)
+{
+    for (int i = 0; i < musicVec.size(); i++) {
+        if (&musicVec[i] == musicPtr) {
+            musicVec.remove(i);
+        }
+    }
 }
 
 void MusicList::readFromDB()

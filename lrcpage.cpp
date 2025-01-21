@@ -38,7 +38,7 @@ LrcPage::~LrcPage()
 
 void LrcPage::getLrcAndParse(const QString &filePath, bool isLocal)
 {
-    qDebug() << "lrcFilePath: " << filePath;
+    // qDebug() << "lrcFilePath: " << filePath;
 
     // lrc 文件不一定在本地
     // 本地文件
@@ -56,7 +56,7 @@ void LrcPage::getLrcAndParse(const QString &filePath, bool isLocal)
         return;
     } else {
         // 远程获取文件
-        qDebug() << "远程获取歌词文件";
+        // qDebug() << "远程获取歌词文件";
         emit sendLrcRequest(QUrl(filePath), std::bind(&LrcPage::parseLrcFile, this, std::placeholders::_1));
     }
 }
@@ -98,6 +98,10 @@ bool LrcPage::parseLrcFile(QString fileContent)
 
     // 清除上一个音乐的信息
     lrcWordLines.clear();
+
+    if (fileContent.isEmpty()) {
+        return false;
+    }
 
     while (!stream.atEnd()) {
         QString line = stream.readLine();

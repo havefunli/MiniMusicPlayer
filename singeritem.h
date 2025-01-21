@@ -18,6 +18,12 @@ public:
     void setSingerName(const QString &);
     void setSingerImage(const QByteArray &);
 
+private slots:
+    void on_btn_clicked();
+
+signals:
+    void singerClicked(const QString);
+
 private:
     Ui::SingerItem *ui;
 };

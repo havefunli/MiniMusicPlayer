@@ -12,6 +12,7 @@ CommonPage::CommonPage(QWidget *parent)
 
     // 鼠标双击信号槽
     connect(ui->pageMusicList, &QListWidget::doubleClicked, this, [=](const QModelIndex &index){
+        qDebug() << "双击播放";
         emit playMusicByIndex(this, index.row());
     });
 }

@@ -30,6 +30,8 @@ Music::Music(QUrl url)
 
 Music::Music(const QJsonObject &jsonObj)
 {
+    setLike(false);
+    setLocal(false);
     setMusicId(jsonObj["uid"].toString());
     setMusicName(jsonObj["musicName"].toString());
     setMusicSinger(jsonObj["musicSinger"].toString());
