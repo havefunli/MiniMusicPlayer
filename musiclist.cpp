@@ -15,12 +15,11 @@ size_t MusicList::size() const
 void MusicList::addMusic(Music music)
 {
     Music *musicPtr = findMUsicByQUrl(music.getMusicQUrl());
-    if (musicPtr != nullptr) {
-        // qDebug() << "曾经听过";
-        music.setLike(musicPtr->getLike());
-        remove(musicPtr);
+    if (musicPtr == nullptr) {
+        musicVec.append(music);
+    } else {
+        // 还没这个需求
     }
-    musicVec.append(music);
 }
 
 void MusicList::addMusicByUrl(const QUrl &url)

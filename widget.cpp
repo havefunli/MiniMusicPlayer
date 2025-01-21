@@ -181,6 +181,7 @@ void Widget::initConnect()
     connect(ui->likePage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
     connect(ui->recentPage, &CommonPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
     connect(ui->searchPage, &SearchResult::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
+    connect(ui->singerInfo, &SingerInfoPage::upDateLikeMusic, this, &Widget::upDateLikeMusicAndPage);
 
     // 点击显示 Lrc
     connect(ui->lrcWord, &QPushButton::clicked, this, &Widget::onLrcWordClicked);
@@ -200,11 +201,13 @@ void Widget::initConnect()
     connect(ui->localPage, &CommonPage::playAll, this, &Widget::onPlayAll);
     connect(ui->recentPage, &CommonPage::playAll, this, &Widget::onPlayAll);
     connect(ui->searchPage, &SearchResult::playAll, this, &Widget::onPlayAllSearch);
+    connect(ui->singerInfo, &SingerInfoPage::playAll, this, &Widget::onPlayAllSinger);
     // 双击处理
     connect(ui->likePage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
     connect(ui->localPage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
     connect(ui->recentPage, &CommonPage::playMusicByIndex, this, &Widget::playMusicByIndex);
     connect(ui->searchPage, &SearchResult::playMusicByIndex, this, &Widget::playOnlineMusicByIndex);
+    connect(ui->singerInfo, &SingerInfoPage::playMusicByIndex, this, &Widget::playSingerMusicByIndex);
     // 记录历史播放
     connect(player, &QMediaPlayer::currentMediaChanged, this, &Widget::recordHistory);
     // 处理静音
@@ -273,7 +276,21 @@ void Widget::playAllMusicOfSearchPage(SearchResult *page, int index)
     // 清空 playlist 歌曲
     playList->clear();
 
-    qDebug() << "我要添加当前页音乐了哦";
+    // qDebug() << "我要添加当前页音乐了哦";
+    // 添加当前页音乐
+    page->addMusicToPlaylist(playList);
+    // 从 index 开始播放, 设置播放模式
+    playList->setCurrentIndex(index);
+    playList->setPlaybackMode(QMediaPlaylist::Loop);
+
+    player->play();
+}
+
+void Widget::playAllMusicOfSingerPage(SingerInfoPage *page, int index)
+{
+    // 清空 playlist 歌曲
+    playList->clear();
+
     // 添加当前页音乐
     page->addMusicToPlaylist(playList);
     // 从 index 开始播放, 设置播放模式
@@ -545,6 +562,11 @@ void Widget::playOnlineMusicByIndex(SearchResult *page, int index)
     playAllMusicOfSearchPage(page, index);
 }
 
+void Widget::playSingerMusicByIndex(SingerInfoPage *page, int index)
+{
+    playAllMusicOfSingerPage(page, index);
+}
+
 void Widget::setPlayerMuted(bool isMuted)
 {
     player->setMuted(isMuted);
@@ -698,6 +720,11 @@ void Widget::onPlayAllSearch()
     playAllMusicOfSearchPage(ui->searchPage, 0);
 }
 
+void Widget::onPlayAllSinger()
+{
+    playAllMusicOfSingerPage(ui->singerInfo, 0);
+}
+
 void Widget::onSingerClicked(const QString singerName)
 {
     Singer *target_singer = singers.findSinger(singerName);
@@ -722,6 +749,7 @@ void Widget::onSingerMusicReady(QVector<Music> musics)
         return;
     }
 
+    qDebug() << "歌手：" << target_singer->getSingerName() << ", 一共有歌曲：" << musics.size();
     for (auto &music : musics) {
         musicList.addMusic(music);
         target_singer->addMusic(musicList.findMUsicByQUrl(music.getMusicQUrl()));

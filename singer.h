@@ -28,6 +28,8 @@ public:
     QVector<Music*> getSingerMusic() const;
     void addMusic(Music*);
 
+    bool IsExists(Music*);
+
 private:
     Ui::Singer *ui;
     QString singerName;

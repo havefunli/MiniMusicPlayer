@@ -11,11 +11,6 @@ SearchResult::SearchResult(QWidget *parent) :
     ui->play->setIcon(QIcon(":/images/play3.png"));
     // 鼠标双击信号槽
     connect(ui->musicList, &QListWidget::doubleClicked, this, [=](const QModelIndex &index){
-
-        for (auto &music : musicsPtr) {
-            qDebug() << music->getMusicQUrl() ;
-        }
-
         emit playMusicByIndex(this, index.row());
     });
 }

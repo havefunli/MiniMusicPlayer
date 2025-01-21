@@ -8,6 +8,11 @@ SingerInfoPage::SingerInfoPage(QWidget *parent) :
     ui(new Ui::SingerInfoPage)
 {
     ui->setupUi(this);
+
+    // 鼠标双击信号槽
+    connect(ui->pageMusicList, &QListWidget::doubleClicked, this, [=](const QModelIndex &index){
+        emit playMusicByIndex(this, index.row());
+    });
 }
 
 SingerInfoPage::~SingerInfoPage()
@@ -40,6 +45,9 @@ void SingerInfoPage::setSingerMusic(const QVector<Music *> musics)
     // 清除之前的内容
     ui->pageMusicList->clear();
 
+    // 保存播放使用
+    this->musics = musics;
+
     for (auto &music : musics) {
 
         ListItemBox *itemBox = new ListItemBox();
@@ -48,6 +56,12 @@ void SingerInfoPage::setSingerMusic(const QVector<Music *> musics)
         QListWidgetItem *item = new QListWidgetItem(ui->pageMusicList);
         item->setSizeHint(QSize(itemBox->width(), itemBox->height()));
         ui->pageMusicList->setItemWidget(item, itemBox);
+
+        // 拦截处理 like 状态改变的信号
+        connect(itemBox, &ListItemBox::likeStatusChanged, this, [=](bool isLike){
+            // 更新界面 and 音乐状态
+            emit upDateLikeMusic(music->getMusicId(), isLike);
+        });
     }
 }
 
@@ -62,4 +76,18 @@ void SingerInfoPage::initPage(const Singer *singer)
     setSingerImage(singer->getSingerImage());
     setSingerIntroduce(singer->getSingerInfo());
     setSingerMusic(singer->getSingerMusic());
+}
+
+void SingerInfoPage::addMusicToPlaylist(QMediaPlaylist *playList)
+{
+    for (auto &music : musics) {
+        if (music != nullptr) {
+            playList->addMedia(music->getMusicQUrl());
+        }
+    }
+}
+
+void SingerInfoPage::on_playBtn_clicked()
+{
+    emit playAll();
 }

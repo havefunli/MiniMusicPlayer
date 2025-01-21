@@ -2,6 +2,7 @@
 #define SINGERINFOPAGE_H
 #include "singer.h"
 #include <QWidget>
+#include <QMediaPlaylist>
 
 namespace Ui {
 class SingerInfoPage;
@@ -19,13 +20,23 @@ public:
     void setSingerImage(const QByteArray&);
     void setSingerIntroduce(const QString&);
     void setSingerMusic(const QVector<Music*>);
-
     QString getSingerName();
 
     void initPage(const Singer*);
 
+    void addMusicToPlaylist(QMediaPlaylist*);
+
+signals:
+    void upDateLikeMusic(const QString&, const bool);
+    void playMusicByIndex(SingerInfoPage*, int);
+    void playAll();
+
+private slots:
+    void on_playBtn_clicked();
+
 private:
     Ui::SingerInfoPage *ui;
+    QVector<Music*> musics;
 };
 
 #endif // SINGERINFOPAGE_H

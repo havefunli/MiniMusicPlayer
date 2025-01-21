@@ -6,6 +6,7 @@
 #include "upload.h"
 #include "lrcpage.h"
 #include "searchresult.h"
+#include "singerinfopage.h"
 #include "serverconnection.h"
 #include <QMouseEvent>
 #include <QWidget>
@@ -45,6 +46,7 @@ public:
 private:
     void playAllMusicOfCommonPage(CommonPage*, int);
     void playAllMusicOfSearchPage(SearchResult*, int);
+    void playAllMusicOfSingerPage(SingerInfoPage*, int);
     void recordHistory(const QMediaContent&);
 
 protected:
@@ -84,6 +86,7 @@ private slots:
     void onMusicStateChanged(QMediaPlayer::State);
     void playMusicByIndex(CommonPage*, int); // 点击播放全部，双击音乐
     void playOnlineMusicByIndex(SearchResult*, int); // 重载
+    void playSingerMusicByIndex(SingerInfoPage*, int); // 重载
 
     void setPlayerMuted(bool); // 设置静音
     void setPlayerVolume(int); // 设置音量
@@ -105,6 +108,7 @@ private slots:
     void onSearchMusic(const QString &); // 搜索音乐
     void onSearchReady(QVector<Music>); // 处理搜索音乐
     void onPlayAllSearch(); // 播放所有搜索音乐
+    void onPlayAllSinger(); // 播放所有歌手演员
     void onSingerClicked(const QString); // 渲染歌手界面
     void onSingerMusicReady(QVector<Music>);
 

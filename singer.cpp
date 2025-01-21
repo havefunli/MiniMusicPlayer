@@ -50,7 +50,19 @@ QVector<Music *> Singer::getSingerMusic() const
 
 void Singer::addMusic(Music *music)
 {
-    musics.append(music);
+    if (!IsExists(music)){
+        musics.append(music);
+    }
+}
+
+bool Singer::IsExists(Music *target_music)
+{
+    for (auto &music : musics) {
+        if (music == target_music) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void SingerList::addSinger(Singer *singer)
